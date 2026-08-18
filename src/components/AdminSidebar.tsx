@@ -8,6 +8,7 @@ import { useState } from 'react';
 const menu = [
   { label: 'Dashboard', href: '/admin/dashboard' },
   { label: 'Manajemen Konten', href: '/admin/konten' },
+  { label: 'Galeri', href: '/admin/galeri' },
   { label: 'Kependudukan', href: '/admin/kependudukan' },
   { label: 'Statistik', href: '/admin/statistik' },
   { label: 'Template Surat', href: '/admin/surat/template' },
