@@ -5,6 +5,9 @@ import {
   residents, addResident,
   letterTemplates, addLetterTemplate,
   users, addUser,
+  complaints, addComplaint,
+  activityLogs, addActivityLog,
+  archivedLetters, addArchivedLetter,
 } from './mock-data';
 
 const baseNews = {
@@ -142,5 +145,53 @@ describe('addUser', () => {
     expect(record.email).toBe('budi@ujungbatu2.desa.id');
     expect(record.role).toBe('operator');
     expect(users.length).toBe(before + 1);
+  });
+});
+
+describe('addComplaint', () => {
+  it('menambahkan pengaduan dengan id, status pending, dan createdAt', () => {
+    const before = complaints.length;
+    const record = addComplaint({ categoryId: '1', description: 'Jalan rusak', location: 'Dusun I', reporterName: 'Warga' });
+
+    expect(record.id).toMatch(/^mock-/);
+    expect(record.status).toBe('pending');
+    expect(record.createdAt).toBeTruthy();
+    expect(record.categoryId).toBe('1');
+    expect(record.description).toBe('Jalan rusak');
+    expect(complaints.length).toBe(before + 1);
+  });
+
+  it('menyimpan pengaduan tanpa lokasi dengan nilai default kosong', () => {
+    const record = addComplaint({ categoryId: '2', description: 'Sampah menumpuk', location: '', reporterName: 'Anonim' });
+
+    expect(record.location).toBe('');
+    expect(record.reporterName).toBe('Anonim');
+    expect(record.status).toBe('pending');
+  });
+});
+
+describe('addActivityLog', () => {
+  it('menambahkan log aktivitas dengan id dan createdAt otomatis', () => {
+    const before = activityLogs.length;
+    const record = addActivityLog({ action: 'UPDATE', tableName: 'residents', performedBy: 'admin' });
+
+    expect(record.id).toMatch(/^mock-/);
+    expect(record.createdAt).toBeTruthy();
+    expect(record.action).toBe('UPDATE');
+    expect(record.tableName).toBe('residents');
+    expect(record.performedBy).toBe('admin');
+    expect(activityLogs.length).toBe(before + 1);
+  });
+});
+
+describe('addArchivedLetter', () => {
+  it('menambahkan arsip surat dengan id otomatis', () => {
+    const before = archivedLetters.length;
+    const record = addArchivedLetter({ letterNumber: '003/SKD/UB-II/07/2026', letterTypeId: '1', issuedAt: '2026-07-23T09:00:00Z' });
+
+    expect(record.id).toMatch(/^mock-/);
+    expect(record.letterNumber).toContain('SKD');
+    expect(record.letterTypeId).toBe('1');
+    expect(archivedLetters.length).toBe(before + 1);
   });
 });

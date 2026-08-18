@@ -109,6 +109,64 @@ export const complaintCategories = [
   { id: "4", name: "Lainnya", defaultSlaDays: 10 },
 ];
 
+export const complaints: Array<{
+  id: string;
+  categoryId: string;
+  description: string;
+  location: string;
+  status: string;
+  reporterName: string;
+  createdAt: string;
+}> = [
+  { id: "c1", categoryId: "1", description: "Jalan menuju kebun warga rusak parah setelah hujan.", location: "Dusun I", status: "pending", reporterName: "Warga", createdAt: "2026-07-28T09:00:00Z" },
+  { id: "c2", categoryId: "2", description: "Saluran air tersumbat sampah di depan balai desa.", location: "Dusun II", status: "processed", reporterName: "Warga", createdAt: "2026-07-25T14:30:00Z" },
+];
+
+// TODO: konfirmasi — penyimpanan pengaduan sementara di memori (mock).
+// Integrasi final menyimpan ke tabel complaints di Supabase (schema.md §3.8).
+export function addComplaint(item: Omit<(typeof complaints)[number], 'id' | 'status' | 'createdAt'>) {
+  const record = { ...item, id: 'mock-' + Date.now(), status: 'pending', createdAt: new Date().toISOString() };
+  complaints.push(record);
+  return record;
+}
+
+export const activityLogs: Array<{
+  id: string;
+  action: string;
+  tableName: string;
+  performedBy: string;
+  createdAt: string;
+}> = [
+  { id: "l1", action: "CREATE", tableName: "letter_requests", performedBy: "Sistem", createdAt: "2026-07-28T10:00:00Z" },
+  { id: "l2", action: "CREATE", tableName: "residents", performedBy: "admin", createdAt: "2026-07-27T08:30:00Z" },
+];
+
+// TODO: konfirmasi — penyimpanan log aktivitas sementara di memori (mock).
+// Integrasi final menyimpan ke tabel activity_logs di Supabase (schema.md §3.14).
+export function addActivityLog(item: Omit<(typeof activityLogs)[number], 'id' | 'createdAt'>) {
+  const record = { ...item, id: 'mock-' + Date.now(), createdAt: new Date().toISOString() };
+  activityLogs.push(record);
+  return record;
+}
+
+export const archivedLetters: Array<{
+  id: string;
+  letterNumber: string;
+  letterTypeId: string;
+  issuedAt: string;
+}> = [
+  { id: "a1", letterNumber: "001/SKT/UB-II/07/2026", letterTypeId: "1", issuedAt: "2026-07-20T10:00:00Z" },
+  { id: "a2", letterNumber: "002/SKK/UB-II/07/2026", letterTypeId: "2", issuedAt: "2026-07-22T11:00:00Z" },
+];
+
+// TODO: konfirmasi — penyimpanan arsip surat sementara di memori (mock).
+// Integrasi final menyimpan ke tabel letters di Supabase (schema.md §3.12).
+export function addArchivedLetter(item: Omit<(typeof archivedLetters)[number], 'id'>) {
+  const record = { ...item, id: 'mock-' + Date.now() };
+  archivedLetters.push(record);
+  return record;
+}
+
 export const letterTypes = [
   { id: "1", code: "SKD", name: "Surat Keterangan Domisili", requiresAttachment: false },
   { id: "2", code: "SKU", name: "Surat Keterangan Usaha", requiresAttachment: false },
