@@ -3,6 +3,7 @@ import { formatDate } from '@/lib/utils';
 import { NewsItem } from '@/lib/types';
 import Link from 'next/link';
 import Image from 'next/image';
+import StatCountUp from '@/components/StatCountUp';
 
 const services = [
   {
@@ -24,13 +25,18 @@ export const dynamic = 'force-dynamic';
 export default async function HomePage() {
   const [news, stats] = await Promise.all([
     api.get<NewsItem[]>('/api/news').catch(() => []),
-    api.get<{ totalPopulation: number; familyCardCount: number; maleCount: number; femaleCount: number }>('/api/stats').catch(() => ({
-      totalPopulation: 0, familyCardCount: 0, maleCount: 0, femaleCount: 0,
-    })),
+    api.get<{
+      totalPopulation: number;
+      familyCardCount: number;
+      maleCount: number;
+      femaleCount: number;
+      dusunStats: { name: string; population: number; families: number }[];
+      occupationStats: { name: string; count: number }[];
+    }>('/api/stats').catch(() => null),
   ]);
 
   const latestNews = (news || []).slice(0, 3);
-  const s = stats || { totalPopulation: 0, familyCardCount: 0, maleCount: 0, femaleCount: 0 };
+  const s = stats || { totalPopulation: 0, familyCardCount: 0, maleCount: 0, femaleCount: 0, dusunStats: [], occupationStats: [] };
 
   return (
     <div>
@@ -102,7 +108,10 @@ export default async function HomePage() {
               { label: 'Kartu Keluarga', value: s.familyCardCount },
               { label: 'Laki-laki', value: s.maleCount },
               { label: 'Perempuan', value: s.femaleCount },
-            ].map((item, i) => (
+              ...s.dusunStats.map((d) => ({ label: d.name, value: d.population })),
+              ...(s.occupationStats[0] ? [{ label: s.occupationStats[0].name, value: s.occupationStats[0].count }] : []),
+              ...(s.occupationStats[1] ? [{ label: s.occupationStats[1].name, value: s.occupationStats[1].count }] : []),
+            ].slice(0, 8).map((item, i) => (
               <div key={i} className="bg-black/[0.03] p-[1px] rounded-[1.5rem] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_8px_32px_rgba(26,28,24,0.08)]">
                 <div className="bg-[var(--color-surface)] rounded-[calc(1.5rem-1px)] p-6 md:p-8 text-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)]">
                   <div className="w-10 h-10 rounded-full bg-[var(--color-primary-tint)] flex items-center justify-center mx-auto mb-4">
@@ -110,7 +119,9 @@ export default async function HomePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
                     </svg>
                   </div>
-                  <div className="text-3xl md:text-4xl font-bold text-[var(--color-primary)] font-[family-name:var(--font-heading)]">{item.value.toLocaleString('id-ID')}</div>
+                  <div className="text-3xl md:text-4xl font-bold text-[var(--color-primary)] font-[family-name:var(--font-heading)]">
+                    <StatCountUp value={item.value} />
+                  </div>
                   <div className="text-sm text-[var(--color-text-muted)] mt-1">{item.label}</div>
                 </div>
               </div>
