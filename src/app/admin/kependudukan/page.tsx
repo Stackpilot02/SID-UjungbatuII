@@ -1,6 +1,7 @@
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import { residents } from '@/data/mock-data';
+import DeleteResidentButton from './delete-resident-button';
 
 export default function AdminKependudukanPage() {
   return (
@@ -25,7 +26,12 @@ export default function AdminKependudukanPage() {
                 <td className="px-4 py-3 font-mono-data text-xs">{r.nik}</td>
                 <td className="px-4 py-3 font-medium">{r.fullName}</td>
                 <td className="px-4 py-3 text-[var(--color-text-muted)]">{r.occupation}</td>
-                <td className="px-4 py-3"><button className="text-[var(--color-primary)] hover:underline text-xs">Edit</button></td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-3">
+                    <a href={`/admin/kependudukan/${r.id}/edit`} className="text-[var(--color-primary)] hover:underline text-xs">Edit</a>
+                    <DeleteResidentButton id={r.id} name={r.fullName} />
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>

@@ -7,9 +7,23 @@ import Button from '@/components/Button';
 import { Label, Input, Select, FieldError } from '@/components/form';
 import { isValidNik, isValidKkNumber, isNotFutureDate } from '@/lib/validation';
 
-export default function ResidentForm() {
+type ResidentFormState = {
+  id?: string;
+  nik: string;
+  kkNumber: string;
+  fullName: string;
+  birthPlace: string;
+  birthDate: string;
+  gender: string;
+  occupation: string;
+  religion: string;
+  maritalStatus: string;
+  familyRole: string;
+};
+
+export default function ResidentForm({ initialData }: { initialData?: Partial<ResidentFormState> }) {
   const router = useRouter();
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<ResidentFormState>({
     nik: '',
     kkNumber: '',
     fullName: '',
@@ -20,6 +34,7 @@ export default function ResidentForm() {
     religion: 'Islam',
     maritalStatus: 'Belum Kawin',
     familyRole: 'Anggota',
+    ...initialData,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
@@ -28,6 +43,8 @@ export default function ResidentForm() {
     setForm((f) => ({ ...f, [key]: value }));
     setErrors((e) => ({ ...e, [key]: '' }));
   };
+
+  const isEdit = Boolean(initialData?.id);
 
   const validate = () => {
     const e: Record<string, string> = {};
@@ -48,8 +65,8 @@ export default function ResidentForm() {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/residents', {
-        method: 'POST',
+      const res = await fetch(isEdit && initialData?.id ? `/api/admin/residents?id=${initialData.id}` : '/api/admin/residents', {
+        method: isEdit ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
@@ -67,12 +84,12 @@ export default function ResidentForm() {
     <form onSubmit={handleSubmit}>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-[28px] font-bold">Tambah Penduduk</h1>
+          <h1 className="text-[28px] font-bold">{isEdit ? 'Edit Penduduk' : 'Tambah Penduduk'}</h1>
           <p className="text-sm text-[var(--color-text-muted)] mt-1">Lengkapi data kependudukan warga sesuai KTP/KK.</p>
         </div>
         <div className="flex items-center gap-3">
           <Button type="button" variant="secondary" href="/admin/kependudukan">Batal</Button>
-          <Button type="submit" disabled={loading}>{loading ? 'Menyimpan...' : 'Simpan'}</Button>
+          <Button type="submit" disabled={loading}>{loading ? 'Menyimpan...' : isEdit ? 'Simpan Perubahan' : 'Simpan'}</Button>
         </div>
       </div>
 

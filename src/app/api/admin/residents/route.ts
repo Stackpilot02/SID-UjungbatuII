@@ -1,5 +1,5 @@
 import { success, error } from '@/lib/api-utils';
-import { residents, addResident } from '@/data/mock-data';
+import { residents, addResident, updateResident, deleteResident } from '@/data/mock-data';
 import { isValidNik, isValidKkNumber, isNotFutureDate } from '@/lib/validation';
 
 const genderOptions = ['Laki-laki', 'Perempuan'];
@@ -42,5 +42,63 @@ export async function POST(request: Request) {
   } catch (err) {
     console.error('Simpan penduduk gagal:', err);
     return error('Gagal menyimpan data penduduk', 500);
+  }
+}
+
+export async function PATCH(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    if (!id) return error('Missing id');
+
+    const existing = residents.find((r) => r.id === id);
+    if (!existing) return error('Penduduk tidak ditemukan', 404);
+
+    const body = await request.json();
+    const { nik, kkNumber, fullName, birthPlace, birthDate, gender, occupation, religion, maritalStatus, familyRole } = body ?? {};
+
+    if (nik !== undefined) {
+      if (!isValidNik(nik)) return error('NIK wajib 16 digit angka');
+      if (residents.some((r) => r.nik === nik && r.id !== id)) return error('NIK sudah terdaftar');
+    }
+    if (kkNumber !== undefined && !isValidKkNumber(kkNumber)) return error('Nomor KK wajib 16 digit angka');
+    if (fullName !== undefined && !fullName.trim()) return error('Nama lengkap wajib diisi');
+    if (birthPlace !== undefined && !birthPlace.trim()) return error('Tempat lahir wajib diisi');
+    if (birthDate !== undefined && (!birthDate || !isNotFutureDate(birthDate))) return error('Tanggal lahir tidak valid');
+    if (gender !== undefined && !genderOptions.includes(gender)) return error('Jenis kelamin tidak valid');
+    if (occupation !== undefined && !occupation.trim()) return error('Pekerjaan wajib diisi');
+
+    const patch: Record<string, unknown> = {};
+    if (nik !== undefined) patch.nik = nik.trim();
+    if (kkNumber !== undefined) patch.kkNumber = kkNumber.trim();
+    if (fullName !== undefined) patch.fullName = fullName.trim();
+    if (birthPlace !== undefined) patch.birthPlace = birthPlace.trim();
+    if (birthDate !== undefined) patch.birthDate = birthDate;
+    if (gender !== undefined) patch.gender = gender;
+    if (occupation !== undefined) patch.occupation = occupation.trim();
+    if (religion !== undefined) patch.religion = religion.trim();
+    if (maritalStatus !== undefined) patch.maritalStatus = maritalStatus.trim();
+    if (familyRole !== undefined) patch.familyRole = familyRole.trim();
+
+    const record = updateResident(id, patch);
+    return success(record);
+  } catch (err) {
+    console.error('Perbarui penduduk gagal:', err);
+    return error('Gagal memperbarui data penduduk', 500);
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    if (!id) return error('Missing id');
+
+    const ok = deleteResident(id);
+    if (!ok) return error('Penduduk tidak ditemukan', 404);
+    return success({ id, deleted: true });
+  } catch (err) {
+    console.error('Hapus penduduk gagal:', err);
+    return error('Gagal menghapus data penduduk', 500);
   }
 }
