@@ -1,9 +1,13 @@
 export interface VillageProfile {
   villageName: string;
+  district?: string;
+  regency?: string;
+  province?: string;
   history: string;
   vision: string;
   mission: string[];
   address: string;
+  phone?: string;
   email: string;
   workingHours: string;
   [key: string]: unknown;
