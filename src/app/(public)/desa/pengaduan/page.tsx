@@ -3,6 +3,7 @@
 import { useState, FormEvent } from 'react';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
+import { Label, Input, Textarea, Select } from '@/components/form';
 import { createClient } from '@/lib/supabase';
 import { complaintCategories } from '@/data/mock-data';
 
@@ -67,25 +68,25 @@ export default function PengaduanPage() {
         <div className="lg:col-span-2">
           <Card>
             <h2 className="text-[22px] font-semibold mb-6">Sampaikan Pengaduan</h2>
-            {error && <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2 mb-4">{error}</p>}
-            <form className="space-y-4" onSubmit={handleSubmit}>
+            {error && <p className="text-sm text-[var(--color-danger)] bg-[var(--color-danger)]/10 rounded-xl px-4 py-3 mb-5">{error}</p>}
+            <form className="space-y-5" onSubmit={handleSubmit}>
               <div>
-                <label className="block text-sm font-medium mb-1">Kategori</label>
-                <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} required className="w-full border border-[var(--color-border)] rounded-lg px-3 py-2.5 text-sm bg-white" defaultValue="">
+                <Label>Kategori</Label>
+                <Select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} required defaultValue="">
                   <option value="" disabled>Pilih kategori</option>
                   {complaintCategories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
+                </Select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Deskripsi</label>
-                <textarea value={description} onChange={(e) => setDescription(e.target.value)} required className="w-full border border-[var(--color-border)] rounded-lg px-3 py-2.5 text-sm min-h-[120px] bg-white" placeholder="Jelaskan pengaduan Anda secara detail" />
+                <Label>Deskripsi</Label>
+                <Textarea value={description} onChange={(e) => setDescription(e.target.value)} required className="min-h-[120px]" placeholder="Jelaskan pengaduan Anda secara detail" />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Lokasi</label>
-                <input value={location} onChange={(e) => setLocation(e.target.value)} className="w-full border border-[var(--color-border)] rounded-lg px-3 py-2.5 text-sm bg-white" placeholder="Sebutkan lokasi kejadian" />
+                <Label>Lokasi</Label>
+                <Input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Sebutkan lokasi kejadian" />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Lampiran Foto (opsional)</label>
+                <Label>Lampiran Foto (opsional)</Label>
                 <input type="file" className="w-full text-sm" accept="image/*" />
                 <p className="text-xs text-[var(--color-text-muted)] mt-1">Maks. 5MB, format JPG/PNG</p>
               </div>

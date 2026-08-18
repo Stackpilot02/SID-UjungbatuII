@@ -166,10 +166,18 @@ export default async function HomePage() {
               <Link key={item.id} href={`/desa/berita/${item.slug}`}>
                 <div className="bg-black/[0.03] p-[1px] rounded-[1.75rem] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_8px_32px_rgba(26,28,24,0.08)] h-full">
                   <div className="bg-[var(--color-surface)] rounded-[calc(1.75rem-1px)] overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] h-full flex flex-col">
-                    <div className="h-44 bg-gradient-to-br from-[var(--color-primary-tint)] to-[var(--color-primary)]/10 flex items-center justify-center">
-                      <svg className="w-10 h-10 text-[var(--color-primary)]/30" fill="none" stroke="currentColor" strokeWidth={1} viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.41a2.25 2.25 0 013.182 0l2.909 2.91m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                      </svg>
+                    <div className="relative h-44 overflow-hidden bg-[var(--color-primary-dark)]">
+                      {item.coverImageUrl ? (
+                        <Image
+                          src={item.coverImageUrl}
+                          alt={item.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-dark)]" />
+                      )}
                     </div>
                     <div className="p-6 flex flex-col flex-1">
                       <div className="flex items-center gap-2 mb-3">

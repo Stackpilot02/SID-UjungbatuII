@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { pdf } from '@react-pdf/renderer';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
+import { Label, Textarea, Select } from '@/components/form';
 import { createClient } from '@/lib/supabase';
 import { letterTypes } from '@/data/mock-data';
 
@@ -81,18 +82,18 @@ export default function AdminCetakMassalPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <h2 className="text-[22px] font-semibold mb-4">Generate Banyak Surat</h2>
-          {error && <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2 mb-4">{error}</p>}
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          {error && <p className="text-sm text-[var(--color-danger)] bg-[var(--color-danger)]/10 rounded-xl px-4 py-3 mb-5">{error}</p>}
+          <form className="space-y-5" onSubmit={handleSubmit}>
             <div>
-              <label className="block text-sm font-medium mb-1">Jenis Surat</label>
-              <select value={letterTypeId} onChange={(e) => setLetterTypeId(e.target.value)} required className="w-full border border-[var(--color-border)] rounded-lg px-3 py-2.5 text-sm bg-white">
+              <Label>Jenis Surat</Label>
+              <Select value={letterTypeId} onChange={(e) => setLetterTypeId(e.target.value)} required>
                 <option value="">Pilih jenis surat</option>
                 {letterTypes.map((lt) => <option key={lt.id} value={lt.id}>{lt.name} ({lt.code})</option>)}
-              </select>
+              </Select>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Data Penduduk (copy-paste NIK, pisahkan dengan koma)</label>
-              <textarea value={niks} onChange={(e) => setNiks(e.target.value)} required className="w-full border border-[var(--color-border)] rounded-lg px-3 py-2.5 text-sm min-h-[100px] bg-white" placeholder="1209123456789001, 1209123456789002, ..." />
+              <Label>Data Penduduk (copy-paste NIK, pisahkan dengan koma)</Label>
+              <Textarea value={niks} onChange={(e) => setNiks(e.target.value)} required className="min-h-[100px] font-mono-data text-xs" placeholder="1209123456789001, 1209123456789002, ..." />
             </div>
             <Button variant="primary" type="submit" disabled={loading}>{loading ? 'Memproses...' : 'Generate & Cetak'}</Button>
           </form>
