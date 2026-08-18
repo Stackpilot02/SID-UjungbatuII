@@ -23,6 +23,7 @@ export default function AdminPenggunaPage() {
               <th className="text-left px-4 py-3 font-medium">Nama</th>
               <th className="text-left px-4 py-3 font-medium">Email</th>
               <th className="text-left px-4 py-3 font-medium">Role</th>
+              <th className="text-left px-4 py-3 font-medium">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -31,6 +32,7 @@ export default function AdminPenggunaPage() {
                 <td className="px-4 py-3 font-medium">{u.fullName}</td>
                 <td className="px-4 py-3 text-[var(--color-text-muted)]">{u.email}</td>
                 <td className="px-4 py-3"><span className="text-xs px-2 py-0.5 rounded bg-[var(--color-primary-tint)] text-[var(--color-primary)]">{roleLabels[u.role] || u.role}</span></td>
+                <td className="px-4 py-3"><a href={`/admin/pengguna/${u.id}/edit`} className="text-[var(--color-primary)] hover:underline text-xs">Edit</a></td>
               </tr>
             ))}
           </tbody>

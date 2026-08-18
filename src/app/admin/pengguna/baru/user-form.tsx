@@ -13,11 +13,20 @@ const roleOptions = [
   { value: 'kepala_desa', label: 'Kepala Desa' },
 ];
 
-export default function UserForm() {
+type UserFormState = {
+  id?: string;
+  fullName: string;
+  email: string;
+  role: string;
+};
+
+export default function UserForm({ initialData }: { initialData?: Partial<UserFormState> }) {
   const router = useRouter();
-  const [form, setForm] = useState({ fullName: '', email: '', role: 'operator' });
+  const [form, setForm] = useState<UserFormState>({ fullName: '', email: '', role: 'operator', ...initialData });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+
+  const isEdit = Boolean(initialData?.id);
 
   const set = (key: keyof typeof form, value: string) => {
     setForm((f) => ({ ...f, [key]: value }));
@@ -34,8 +43,8 @@ export default function UserForm() {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/users', {
-        method: 'POST',
+      const res = await fetch(isEdit && initialData?.id ? `/api/admin/users?id=${initialData.id}` : '/api/admin/users', {
+        method: isEdit ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
@@ -53,12 +62,12 @@ export default function UserForm() {
     <form onSubmit={handleSubmit}>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-[28px] font-bold">Tambah Pengguna</h1>
+          <h1 className="text-[28px] font-bold">{isEdit ? 'Edit Pengguna' : 'Tambah Pengguna'}</h1>
           <p className="text-sm text-[var(--color-text-muted)] mt-1">Buat akun perangkat desa dengan hak akses sesuai peran.</p>
         </div>
         <div className="flex items-center gap-3">
           <Button type="button" variant="secondary" href="/admin/pengguna">Batal</Button>
-          <Button type="submit" disabled={loading}>{loading ? 'Menyimpan...' : 'Simpan'}</Button>
+          <Button type="submit" disabled={loading}>{loading ? 'Menyimpan...' : isEdit ? 'Simpan Perubahan' : 'Simpan'}</Button>
         </div>
       </div>
 
