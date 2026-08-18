@@ -10,12 +10,12 @@ export default function Button({
   href?: string;
   className?: string;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  const base = 'inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm transition-colors duration-150 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
+  const base = 'group inline-flex items-center justify-center gap-3 px-6 py-3 rounded-full font-medium text-sm transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.97] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
   const variants: Record<Variant, string> = {
-    primary: 'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]',
-    secondary: 'border border-[var(--color-primary)] text-[var(--color-primary)] bg-transparent hover:bg-[var(--color-primary-tint)]',
-    accent: 'bg-[var(--color-accent-clay)] text-white hover:opacity-90',
-    danger: 'bg-[var(--color-danger)] text-white hover:opacity-90',
+    primary: 'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)] shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]',
+    secondary: 'border border-[var(--color-primary)]/30 text-[var(--color-primary)] bg-transparent hover:bg-[var(--color-primary-tint)]',
+    accent: 'bg-[var(--color-accent-clay)] text-white hover:opacity-90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]',
+    danger: 'bg-[var(--color-danger)] text-white hover:opacity-90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]',
   };
 
   if (href) {
