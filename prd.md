@@ -232,10 +232,12 @@ Detail permission per aksi dan aturan eskalasi ada di **`rules.md`** §2.
 - ✅ Tahap 1 — Frontend (UI dengan data dummy): **Selesai**
 - ✅ Tahap 2 — Backend (API & Database): **Selesai**
 - 🏗️ Tahap 3 — Integrasi, Generate PDF/QR, Penyempurnaan, Testing & Deployment: **Sedang berjalan**
-  - ✅ Unit test logika penomoran surat, RBAC, validasi, dan mock store (Vitest) — 42 test lulus
+  - ✅ Unit test logika penomoran surat, RBAC, validasi, dan mock store (Vitest) — 61 test lulus
   - ✅ Lint & typecheck bersih, build produksi sukses
   - ✅ Alur pengajuan surat publik (form + cek status via nomor referensi), form admin tambah penduduk/template/pengguna, galeri dengan foto, peta kontak (OSM), dashboard admin dinamis, auth & form mengikuti design system v3.0
   - ✅ Halaman admin layanan surat, proses surat, arsip, pengaduan, dan log aktivitas dialihkan dari Supabase langsung ke mock store via API (data tampil nyata meski tanpa koneksi Supabase)
+  - ✅ Statistik: halaman admin pengaturan data statistik (`/admin/statistik` + API `PUT /api/admin/stats`), kartu statistik home memakai animasi count-up (8 kartu), pengelompokan "dusun" dihapus karena desa asli satu wilayah
+  - ✅ CRUD konten admin (kontrol penuh konten halaman publik): tambah/edit/hapus berita, tambah/hapus galeri (upload lokal), tambah/edit/hapus penduduk, tambah/edit/hapus template surat (versi naik otomatis saat edit), tambah/edit pengguna — 61 test lulus
   - 🏗️ Sisa Tahap 3.3/3.4 (notifikasi, rate limiting, UAT, deploy) masih berjalan
 
 ## 18. Glosarium
