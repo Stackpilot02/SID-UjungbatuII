@@ -18,6 +18,6 @@ async function request<T>(url: string, options: Options = {}): Promise<T> {
 
 export const api = {
   get: <T>(url: string, params?: Record<string, string>) => request<T>(url, { params }),
-  post: <T>(url: string, body?: any) => request<T>(url, { method: 'POST', body: JSON.stringify(body) }),
-  patch: <T>(url: string, body?: any) => request<T>(url, { method: 'PATCH', body: JSON.stringify(body) }),
+  post: <T>(url: string, body?: unknown) => request<T>(url, { method: 'POST', body: JSON.stringify(body) }),
+  patch: <T>(url: string, body?: unknown) => request<T>(url, { method: 'PATCH', body: JSON.stringify(body) }),
 };

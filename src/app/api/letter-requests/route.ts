@@ -1,4 +1,4 @@
-import { success, error, unauthorized } from '@/lib/api-utils';
+import { success, error } from '@/lib/api-utils';
 
 export async function GET() {
   return success([]);

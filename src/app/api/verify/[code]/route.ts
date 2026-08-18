@@ -1,5 +1,15 @@
 import { createClient } from '@/lib/supabase';
-import { success, error, notFound } from '@/lib/api-utils';
+import { success, notFound } from '@/lib/api-utils';
+
+interface LetterTypeRow {
+  name?: string;
+}
+
+interface VerifyRow {
+  letter_number: string;
+  issued_at: string;
+  letter_types: LetterTypeRow | LetterTypeRow[] | null;
+}
 
 export async function GET(
   _request: Request,
@@ -16,10 +26,15 @@ export async function GET(
 
   if (err || !data) return notFound();
 
+  const row = data as unknown as VerifyRow;
+  const letterType = Array.isArray(row.letter_types)
+    ? row.letter_types[0]?.name
+    : row.letter_types?.name;
+
   return success({
     status: 'Sah',
-    letterNumber: data.letter_number,
-    issuedAt: data.issued_at,
-    letterType: Array.isArray(data.letter_types) ? data.letter_types[0]?.name : (data.letter_types as any)?.name,
+    letterNumber: row.letter_number,
+    issuedAt: row.issued_at,
+    letterType,
   });
 }
