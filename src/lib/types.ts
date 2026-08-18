@@ -46,8 +46,8 @@ export interface PopulationStats {
   familyCardCount: number;
   maleCount: number;
   femaleCount: number;
-  dusunStats: { name: string; population: number }[];
   occupationStats: { name: string; count: number }[];
+  religionStats: { name: string; count: number }[];
 }
 
 export type LetterRequestStatus = 'pending' | 'verified' | 'approved' | 'rejected' | 'completed';

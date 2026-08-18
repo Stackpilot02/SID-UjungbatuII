@@ -259,17 +259,16 @@ export const residents: Array<{
   birthPlace: string;
   birthDate: string;
   gender: string;
-  dusun: string;
   occupation: string;
   religion: string;
   maritalStatus: string;
   familyRole: string;
 }> = [
-  { id: "1", nik: "1209123456789001", kkNumber: "1209123456789001", fullName: "Muhammad Yusuf Lubis", birthPlace: "Ujungbatu", birthDate: "1975-03-15", gender: "Laki-laki", dusun: "Dusun I", occupation: "Petani", religion: "Islam", maritalStatus: "Kawin", familyRole: "Kepala Keluarga" },
-  { id: "2", nik: "1209123456789002", kkNumber: "1209123456789001", fullName: "Siti Rahma Dalimunthe", birthPlace: "Padang Lawas", birthDate: "1980-07-22", gender: "Perempuan", dusun: "Dusun I", occupation: "Ibu Rumah Tangga", religion: "Islam", maritalStatus: "Kawin", familyRole: "Anggota" },
-  { id: "3", nik: "1209123456789003", kkNumber: "1209123456789002", fullName: "Ahmad Siregar", birthPlace: "Hutaraja", birthDate: "1982-11-08", gender: "Laki-laki", dusun: "Dusun II", occupation: "Petani", religion: "Islam", maritalStatus: "Kawin", familyRole: "Kepala Keluarga" },
-  { id: "4", nik: "1209123456789004", kkNumber: "1209123456789002", fullName: "Fatimah Harahap", birthPlace: "Padang Lawas", birthDate: "1985-05-30", gender: "Perempuan", dusun: "Dusun II", occupation: "Pedagang", religion: "Islam", maritalStatus: "Kawin", familyRole: "Anggota" },
-  { id: "5", nik: "1209123456789005", kkNumber: "1209123456789003", fullName: "Abdul Hakim Nasution", birthPlace: "Gunungtua", birthDate: "1990-01-20", gender: "Laki-laki", dusun: "Dusun I", occupation: "Guru", religion: "Islam", maritalStatus: "Kawin", familyRole: "Kepala Keluarga" },
+  { id: "1", nik: "1209123456789001", kkNumber: "1209123456789001", fullName: "Muhammad Yusuf Lubis", birthPlace: "Ujungbatu", birthDate: "1975-03-15", gender: "Laki-laki", occupation: "Petani", religion: "Islam", maritalStatus: "Kawin", familyRole: "Kepala Keluarga" },
+  { id: "2", nik: "1209123456789002", kkNumber: "1209123456789001", fullName: "Siti Rahma Dalimunthe", birthPlace: "Padang Lawas", birthDate: "1980-07-22", gender: "Perempuan", occupation: "Ibu Rumah Tangga", religion: "Islam", maritalStatus: "Kawin", familyRole: "Anggota" },
+  { id: "3", nik: "1209123456789003", kkNumber: "1209123456789002", fullName: "Ahmad Siregar", birthPlace: "Hutaraja", birthDate: "1982-11-08", gender: "Laki-laki", occupation: "Petani", religion: "Islam", maritalStatus: "Kawin", familyRole: "Kepala Keluarga" },
+  { id: "4", nik: "1209123456789004", kkNumber: "1209123456789002", fullName: "Fatimah Harahap", birthPlace: "Padang Lawas", birthDate: "1985-05-30", gender: "Perempuan", occupation: "Pedagang", religion: "Islam", maritalStatus: "Kawin", familyRole: "Anggota" },
+  { id: "5", nik: "1209123456789005", kkNumber: "1209123456789003", fullName: "Abdul Hakim Nasution", birthPlace: "Gunungtua", birthDate: "1990-01-20", gender: "Laki-laki", occupation: "Guru", religion: "Islam", maritalStatus: "Kawin", familyRole: "Kepala Keluarga" },
 ];
 
 // TODO: konfirmasi — penyimpanan penduduk sementara di memori (mock).
@@ -285,10 +284,6 @@ export const stats = {
   maleCount: 620,
   femaleCount: 630,
   familyCardCount: 380,
-  dusunStats: [
-    { name: "Dusun I", population: 650, families: 200 },
-    { name: "Dusun II", population: 600, families: 180 },
-  ],
   occupationStats: [
     { name: "Petani", count: 450 },
     { name: "Pedagang", count: 120 },
@@ -302,3 +297,19 @@ export const stats = {
     { name: "Kristen", count: 10 },
   ],
 };
+
+// TODO: konfirmasi — statistik kependudukan sementara di memori (mock).
+// Integrasi final menyimpan ke tabel stats/village_stats di Supabase.
+export type StatsData = typeof stats;
+
+// TODO: konfirmasi — pembaruan statistik mengubah objek stats secara mutatif
+// agar konsisten dengan pola mock store lain (liat addResident, addNews, dst).
+export function updateStats(next: StatsData) {
+  stats.totalPopulation = next.totalPopulation;
+  stats.maleCount = next.maleCount;
+  stats.femaleCount = next.femaleCount;
+  stats.familyCardCount = next.familyCardCount;
+  stats.occupationStats = next.occupationStats.map((o) => ({ ...o }));
+  stats.religionStats = next.religionStats.map((r) => ({ ...r }));
+  return stats;
+}

@@ -8,6 +8,7 @@ import {
   complaints, addComplaint,
   activityLogs, addActivityLog,
   archivedLetters, addArchivedLetter,
+  stats, updateStats,
 } from './mock-data';
 
 const baseNews = {
@@ -83,7 +84,6 @@ const baseResident = {
   birthPlace: 'Padang Lawas',
   birthDate: '1995-02-10',
   gender: 'Perempuan',
-  dusun: 'Dusun I',
   occupation: 'Pedagang',
   religion: 'Islam',
   maritalStatus: 'Belum Kawin',
@@ -98,7 +98,7 @@ describe('addResident', () => {
     expect(record.id).toMatch(/^mock-/);
     expect(record.nik).toBe(baseResident.nik);
     expect(record.fullName).toBe(baseResident.fullName);
-    expect(record.dusun).toBe('Dusun I');
+    expect(record.occupation).toBe('Pedagang');
     expect(residents.length).toBe(before + 1);
     expect(residents).toContain(record);
   });
@@ -193,5 +193,44 @@ describe('addArchivedLetter', () => {
     expect(record.letterNumber).toContain('SKD');
     expect(record.letterTypeId).toBe('1');
     expect(archivedLetters.length).toBe(before + 1);
+  });
+});
+
+describe('updateStats', () => {
+  it('memperbarui seluruh angka agregat statistik', () => {
+    const next = {
+      totalPopulation: 1300,
+      maleCount: 650,
+      femaleCount: 650,
+      familyCardCount: 400,
+      occupationStats: [{ name: 'Petani', count: 500 }],
+      religionStats: [{ name: 'Islam', count: 1290 }],
+    };
+
+    updateStats(next);
+
+    expect(stats.totalPopulation).toBe(1300);
+    expect(stats.maleCount).toBe(650);
+    expect(stats.femaleCount).toBe(650);
+    expect(stats.familyCardCount).toBe(400);
+    expect(stats.occupationStats).toEqual([{ name: 'Petani', count: 500 }]);
+    expect(stats.religionStats).toEqual([{ name: 'Islam', count: 1290 }]);
+  });
+
+  it('menyalin array agar tidak saling mereferensi objek yang sama', () => {
+    const next = {
+      totalPopulation: 1250,
+      maleCount: 620,
+      femaleCount: 630,
+      familyCardCount: 380,
+      occupationStats: [{ name: 'Petani', count: 450 }],
+      religionStats: [{ name: 'Islam', count: 1240 }],
+    };
+
+    const source = { name: 'Petani', count: 450 };
+    updateStats({ ...next, occupationStats: [source] });
+
+    source.count = 999;
+    expect(stats.occupationStats[0].count).toBe(450);
   });
 });
