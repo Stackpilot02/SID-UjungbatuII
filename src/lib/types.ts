@@ -53,3 +53,41 @@ export interface PopulationStats {
 export type LetterRequestStatus = 'pending' | 'verified' | 'approved' | 'rejected' | 'completed';
 export type ComplaintStatus = 'received' | 'in_progress' | 'resolved' | 'rejected';
 export type UserRole = 'warga' | 'operator' | 'admin' | 'kepala_desa';
+
+export interface LetterRequest {
+  id: string;
+  requesterName: string;
+  requesterNik: string;
+  letterTypeId: string;
+  phone?: string;
+  email?: string;
+  purpose: string;
+  status: string;
+  createdAt: string;
+  additionalData?: Record<string, unknown>;
+}
+
+export interface Complaint {
+  id: string;
+  categoryId: string;
+  description: string;
+  location: string;
+  status: string;
+  reporterName: string;
+  createdAt: string;
+}
+
+export interface ActivityLog {
+  id: string;
+  action: string;
+  tableName: string;
+  performedBy: string;
+  createdAt: string;
+}
+
+export interface ArchivedLetter {
+  id: string;
+  letterNumber: string;
+  letterTypeId: string;
+  issuedAt: string;
+}
