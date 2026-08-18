@@ -90,6 +90,20 @@ export function addNews(item: Omit<(typeof news)[number], 'id' | 'createdAt'>) {
   return record;
 }
 
+export function updateNews(id: string, patch: Partial<Omit<(typeof news)[number], 'id' | 'createdAt'>>) {
+  const idx = news.findIndex((n) => n.id === id);
+  if (idx === -1) return null;
+  news[idx] = { ...news[idx], ...patch, id };
+  return news[idx];
+}
+
+export function deleteNews(id: string) {
+  const idx = news.findIndex((n) => n.id === id);
+  if (idx === -1) return false;
+  news.splice(idx, 1);
+  return true;
+}
+
 // TODO: konfirmasi — foto galeri masih placeholder (aset lokal /public/gallery).
 // Ganti dengan foto asli kegiatan desa saat tersedia; integrasi final
 // menyimpan ke tabel gallery_items di Supabase (schema.md §3.6).
@@ -101,6 +115,19 @@ export const galleryItems = [
   { id: "5", title: "Musyawarah Desa", description: "Musyawarah perencanaan pembangunan desa", mediaUrl: "/gallery/musyawarah-desa.jpg", mediaType: "image", eventDate: "2026-06-28" },
   { id: "6", title: "Pengajian Rutin", description: "Pengajian rutin ibu-ibu Desa Ujungbatu II", mediaUrl: "/gallery/pengajian-rutin.jpg", mediaType: "image", eventDate: "2026-06-25" },
 ];
+
+export function addGalleryItem(item: Omit<(typeof galleryItems)[number], 'id'>) {
+  const record = { ...item, id: 'mock-' + Date.now() };
+  galleryItems.push(record);
+  return record;
+}
+
+export function deleteGalleryItem(id: string) {
+  const idx = galleryItems.findIndex((g) => g.id === id);
+  if (idx === -1) return false;
+  galleryItems.splice(idx, 1);
+  return true;
+}
 
 export const complaintCategories = [
   { id: "1", name: "Infrastruktur", defaultSlaDays: 7 },
@@ -197,6 +224,13 @@ export function addUser(item: Omit<(typeof users)[number], 'id'>) {
   return record;
 }
 
+export function updateUser(id: string, patch: Partial<Omit<(typeof users)[number], 'id'>>) {
+  const idx = users.findIndex((u) => u.id === id);
+  if (idx === -1) return null;
+  users[idx] = { ...users[idx], ...patch, id };
+  return users[idx];
+}
+
 export const letterRequests: Array<{
   id: string;
   requesterName: string;
@@ -234,6 +268,23 @@ export function addLetterTemplate(
   };
   letterTemplates.push(record);
   return record;
+}
+
+export function updateLetterTemplate(
+  id: string,
+  patch: Partial<Omit<(typeof letterTemplates)[number], 'id' | 'createdAt'>>
+) {
+  const idx = letterTemplates.findIndex((t) => t.id === id);
+  if (idx === -1) return null;
+  letterTemplates[idx] = { ...letterTemplates[idx], ...patch, id, version: letterTemplates[idx].version + 1 };
+  return letterTemplates[idx];
+}
+
+export function deleteLetterTemplate(id: string) {
+  const idx = letterTemplates.findIndex((t) => t.id === id);
+  if (idx === -1) return false;
+  letterTemplates.splice(idx, 1);
+  return true;
 }
 
 // TODO: konfirmasi — penyimpanan pengajuan surat sementara di memori (mock).
@@ -277,6 +328,20 @@ export function addResident(item: Omit<(typeof residents)[number], 'id'>) {
   const record = { ...item, id: 'mock-' + Date.now() };
   residents.push(record);
   return record;
+}
+
+export function updateResident(id: string, patch: Partial<Omit<(typeof residents)[number], 'id'>>) {
+  const idx = residents.findIndex((r) => r.id === id);
+  if (idx === -1) return null;
+  residents[idx] = { ...residents[idx], ...patch, id };
+  return residents[idx];
+}
+
+export function deleteResident(id: string) {
+  const idx = residents.findIndex((r) => r.id === id);
+  if (idx === -1) return false;
+  residents.splice(idx, 1);
+  return true;
 }
 
 export const stats = {

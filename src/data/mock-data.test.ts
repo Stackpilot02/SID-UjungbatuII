@@ -1,13 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import {
-  news, addNews,
+  news, addNews, updateNews, deleteNews,
   letterRequests, addLetterRequest,
-  residents, addResident,
-  letterTemplates, addLetterTemplate,
-  users, addUser,
+  residents, addResident, updateResident, deleteResident,
+  letterTemplates, addLetterTemplate, updateLetterTemplate, deleteLetterTemplate,
+  users, addUser, updateUser,
   complaints, addComplaint,
   activityLogs, addActivityLog,
   archivedLetters, addArchivedLetter,
+  galleryItems, addGalleryItem, deleteGalleryItem,
   stats, updateStats,
 } from './mock-data';
 
@@ -43,6 +44,38 @@ describe('addNews', () => {
     expect(record.excerpt).toBe('');
     expect(record.category).toBe('berita');
     expect(record.publishedAt).toBe(baseNews.publishedAt);
+  });
+});
+
+describe('updateNews', () => {
+  it('memperbarui berita berdasarkan id dan mengembalikan data terbaru', () => {
+    const record = addNews(baseNews);
+    const updated = updateNews(record.id, { title: 'Judul Baru', status: 'draft' });
+
+    expect(updated).not.toBeNull();
+    expect(updated!.title).toBe('Judul Baru');
+    expect(updated!.status).toBe('draft');
+    expect(updated!.id).toBe(record.id);
+    expect(news.find((n) => n.id === record.id)?.title).toBe('Judul Baru');
+  });
+
+  it('mengembalikan null jika id tidak ditemukan', () => {
+    expect(updateNews('tidak-ada', { title: 'X' })).toBeNull();
+  });
+});
+
+describe('deleteNews', () => {
+  it('menghapus berita berdasarkan id dan mengembalikan true', () => {
+    const record = addNews(baseNews);
+    const before = news.length;
+
+    expect(deleteNews(record.id)).toBe(true);
+    expect(news.length).toBe(before - 1);
+    expect(news.find((n) => n.id === record.id)).toBeUndefined();
+  });
+
+  it('mengembalikan false jika id tidak ditemukan', () => {
+    expect(deleteNews('tidak-ada')).toBe(false);
   });
 });
 
@@ -104,6 +137,38 @@ describe('addResident', () => {
   });
 });
 
+describe('updateResident', () => {
+  it('memperbarui penduduk berdasarkan id dan mengembalikan data terbaru', () => {
+    const record = addResident(baseResident);
+    const updated = updateResident(record.id, { occupation: 'Petani', maritalStatus: 'Kawin' });
+
+    expect(updated).not.toBeNull();
+    expect(updated!.occupation).toBe('Petani');
+    expect(updated!.maritalStatus).toBe('Kawin');
+    expect(updated!.fullName).toBe(baseResident.fullName);
+    expect(residents.find((r) => r.id === record.id)?.occupation).toBe('Petani');
+  });
+
+  it('mengembalikan null jika id tidak ditemukan', () => {
+    expect(updateResident('tidak-ada', { fullName: 'X' })).toBeNull();
+  });
+});
+
+describe('deleteResident', () => {
+  it('menghapus penduduk berdasarkan id dan mengembalikan true', () => {
+    const record = addResident(baseResident);
+    const before = residents.length;
+
+    expect(deleteResident(record.id)).toBe(true);
+    expect(residents.length).toBe(before - 1);
+    expect(residents.find((r) => r.id === record.id)).toBeUndefined();
+  });
+
+  it('mengembalikan false jika id tidak ditemukan', () => {
+    expect(deleteResident('tidak-ada')).toBe(false);
+  });
+});
+
 const baseTemplate = {
   letterTypeId: '1',
   name: 'Template SKD v1',
@@ -135,6 +200,38 @@ describe('addLetterTemplate', () => {
   });
 });
 
+describe('updateLetterTemplate', () => {
+  it('memperbarui template dan menaikkan versi', () => {
+    const record = addLetterTemplate(baseTemplate);
+    const updated = updateLetterTemplate(record.id, { isActive: false, bodyTemplate: 'Isi baru' });
+
+    expect(updated).not.toBeNull();
+    expect(updated!.isActive).toBe(false);
+    expect(updated!.bodyTemplate).toBe('Isi baru');
+    expect(updated!.version).toBe(2);
+    expect(updated!.id).toBe(record.id);
+  });
+
+  it('mengembalikan null jika id tidak ditemukan', () => {
+    expect(updateLetterTemplate('tidak-ada', { name: 'X' })).toBeNull();
+  });
+});
+
+describe('deleteLetterTemplate', () => {
+  it('menghapus template berdasarkan id dan mengembalikan true', () => {
+    const record = addLetterTemplate(baseTemplate);
+    const before = letterTemplates.length;
+
+    expect(deleteLetterTemplate(record.id)).toBe(true);
+    expect(letterTemplates.length).toBe(before - 1);
+    expect(letterTemplates.find((t) => t.id === record.id)).toBeUndefined();
+  });
+
+  it('mengembalikan false jika id tidak ditemukan', () => {
+    expect(deleteLetterTemplate('tidak-ada')).toBe(false);
+  });
+});
+
 describe('addUser', () => {
   it('menambahkan pengguna dengan id otomatis dan menyimpan semua field', () => {
     const before = users.length;
@@ -145,6 +242,22 @@ describe('addUser', () => {
     expect(record.email).toBe('budi@ujungbatu2.desa.id');
     expect(record.role).toBe('operator');
     expect(users.length).toBe(before + 1);
+  });
+});
+
+describe('updateUser', () => {
+  it('memperbarui pengguna berdasarkan id', () => {
+    const record = addUser({ fullName: 'Citra', email: 'citra@desa.id', role: 'operator' });
+    const updated = updateUser(record.id, { role: 'admin', fullName: 'Citra Siregar' });
+
+    expect(updated).not.toBeNull();
+    expect(updated!.role).toBe('admin');
+    expect(updated!.fullName).toBe('Citra Siregar');
+    expect(updated!.email).toBe('citra@desa.id');
+  });
+
+  it('mengembalikan null jika id tidak ditemukan', () => {
+    expect(updateUser('tidak-ada', { role: 'admin' })).toBeNull();
   });
 });
 
@@ -193,6 +306,32 @@ describe('addArchivedLetter', () => {
     expect(record.letterNumber).toContain('SKD');
     expect(record.letterTypeId).toBe('1');
     expect(archivedLetters.length).toBe(before + 1);
+  });
+});
+
+describe('galleryItems', () => {
+  it('menambahkan item galeri dengan id otomatis dan menyimpan semua field', () => {
+    const before = galleryItems.length;
+    const record = addGalleryItem({ title: 'Foto Baru', description: 'Kegiatan desa', mediaUrl: '/gallery/baru.jpg', mediaType: 'image', eventDate: '2026-08-01' });
+
+    expect(record.id).toMatch(/^mock-/);
+    expect(record.title).toBe('Foto Baru');
+    expect(record.mediaUrl).toBe('/gallery/baru.jpg');
+    expect(galleryItems.length).toBe(before + 1);
+    expect(galleryItems).toContain(record);
+  });
+
+  it('menghapus item galeri berdasarkan id dan mengembalikan true', () => {
+    const record = addGalleryItem({ title: 'Foto Hapus', description: '', mediaUrl: '/gallery/hapus.jpg', mediaType: 'image', eventDate: '2026-08-02' });
+    const before = galleryItems.length;
+
+    expect(deleteGalleryItem(record.id)).toBe(true);
+    expect(galleryItems.length).toBe(before - 1);
+    expect(galleryItems.find((g) => g.id === record.id)).toBeUndefined();
+  });
+
+  it('mengembalikan false saat menghapus id yang tidak ada', () => {
+    expect(deleteGalleryItem('tidak-ada')).toBe(false);
   });
 });
 
