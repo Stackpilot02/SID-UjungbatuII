@@ -1,16 +1,13 @@
-import { createClient } from '@/lib/supabase';
+import { api } from '@/lib/api-client';
 import Card from '@/components/Card';
 import StatusBadge from '@/components/StatusBadge';
 import { letterTypes } from '@/data/mock-data';
+import type { LetterRequest } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminLayananSuratPage() {
-  const supabase = createClient();
-  const { data: requests } = await supabase
-    .from('letter_requests')
-    .select('id, letter_type_id, purpose, status, created_at')
-    .order('created_at', { ascending: false });
+  const requests = await api.get<LetterRequest[]>('/api/admin/letter-requests');
 
   return (
     <div>
@@ -25,6 +22,7 @@ export default async function AdminLayananSuratPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--color-border)]">
+                <th className="text-left px-4 py-3 font-medium">Pemohon</th>
                 <th className="text-left px-4 py-3 font-medium">Jenis</th>
                 <th className="text-left px-4 py-3 font-medium">Keperluan</th>
                 <th className="text-left px-4 py-3 font-medium">Status</th>
@@ -34,10 +32,11 @@ export default async function AdminLayananSuratPage() {
             <tbody>
               {requests.map((r) => (
                 <tr key={r.id} className="border-b border-[var(--color-border)] last:border-0">
-                  <td className="px-4 py-3">{letterTypes.find(lt => lt.id === r.letter_type_id)?.name || r.letter_type_id}</td>
+                  <td className="px-4 py-3">{r.requesterName}</td>
+                  <td className="px-4 py-3">{letterTypes.find(lt => lt.id === r.letterTypeId)?.name || r.letterTypeId}</td>
                   <td className="px-4 py-3 text-[var(--color-text-muted)]">{r.purpose}</td>
                   <td className="px-4 py-3"><StatusBadge status={r.status} /></td>
-                  <td className="px-4 py-3 text-[var(--color-text-muted)]">{new Date(r.created_at).toLocaleDateString('id-ID')}</td>
+                  <td className="px-4 py-3 text-[var(--color-text-muted)]">{new Date(r.createdAt).toLocaleDateString('id-ID')}</td>
                 </tr>
               ))}
             </tbody>

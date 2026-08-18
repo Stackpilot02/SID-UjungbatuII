@@ -4,7 +4,6 @@ import { useState, FormEvent } from 'react';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import { Label, Input, Textarea, Select } from '@/components/form';
-import { createClient } from '@/lib/supabase';
 import { complaintCategories } from '@/data/mock-data';
 
 export default function PengaduanPage() {
@@ -14,29 +13,26 @@ export default function PengaduanPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const supabase = createClient();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      setError('Silakan masuk terlebih dahulu untuk mengirim pengaduan');
-      setLoading(false);
-      return;
-    }
-
-    const { error: insertError } = await supabase.from('complaints').insert({
-      reporter_id: user.id,
-      category_id: categoryId,
-      description,
-      location,
-    });
-
-    if (insertError) {
-      setError(insertError.message);
+    try {
+      const res = await fetch('/api/complaints', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ categoryId, description, location }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        setError(json.error || 'Gagal mengirim pengaduan');
+        setLoading(false);
+        return;
+      }
+    } catch {
+      setError('Terjadi kesalahan jaringan. Silakan coba lagi.');
       setLoading(false);
       return;
     }

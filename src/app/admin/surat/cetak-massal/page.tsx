@@ -6,7 +6,6 @@ import { pdf } from '@react-pdf/renderer';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import { Label, Textarea, Select } from '@/components/form';
-import { createClient } from '@/lib/supabase';
 import { letterTypes } from '@/data/mock-data';
 
 const LetterPDF = dynamic(() => import('@/components/LetterPDF').then(m => ({ default: m.LetterPDF })), { ssr: false });
@@ -17,7 +16,6 @@ export default function AdminCetakMassalPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [results, setResults] = useState<{ name: string; nik: string; number: string }[]>([]);
-  const supabase = createClient();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -30,25 +28,24 @@ export default function AdminCetakMassalPage() {
 
     setLoading(true);
 
-    const { data: residents, error: dbError } = await supabase
-      .from('residents')
-      .select('nik, full_name, address')
-      .in('nik', nikList);
+    const res = await fetch('/api/admin/residents');
+    const json = await res.json();
+    const allResidents: Array<{ nik: string; fullName: string; dusun: string }> = json.success ? json.data : [];
+    const residents = allResidents.filter(r => nikList.includes(r.nik));
 
-    if (dbError) { setError(dbError.message); setLoading(false); return; }
-    if (!residents || residents.length === 0) { setError('NIK tidak ditemukan di database'); setLoading(false); return; }
+    if (residents.length === 0) { setError('NIK tidak ditemukan di database'); setLoading(false); return; }
 
     const resultsArr: { name: string; nik: string; number: string }[] = [];
 
     for (const resident of residents) {
-      const res = await fetch('/api/admin/letters/generate', {
+      const res2 = await fetch('/api/admin/letters/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ letter_type_id: letterTypeId, resident_id: resident.nik }),
       });
-      const json = await res.json();
-      if (json.success) {
-        resultsArr.push({ name: resident.full_name, nik: resident.nik, number: json.data.letter_number });
+      const genJson = await res2.json();
+      if (genJson.success) {
+        resultsArr.push({ name: resident.fullName, nik: resident.nik, number: genJson.data.letter_number });
       }
     }
 
@@ -60,7 +57,7 @@ export default function AdminCetakMassalPage() {
           letterNumber={resultsArr[0].number}
           residentName={resultsArr[0].name}
           residentNIK={resultsArr[0].nik}
-          residentAddress={residents[0]?.address || '-'}
+          residentAddress={residents[0]?.dusun || '-'}
           purpose="administrasi"
         />
       );

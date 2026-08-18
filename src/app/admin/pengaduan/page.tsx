@@ -1,21 +1,17 @@
-import { createAdminClient } from '@/lib/supabase-admin';
+import { api } from '@/lib/api-client';
 import Card from '@/components/Card';
 import StatusBadge from '@/components/StatusBadge';
 import { complaintCategories } from '@/data/mock-data';
+import type { Complaint } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminPengaduanPage() {
-  const supabase = createAdminClient();
-
-  const { data: complaints } = await supabase
-    .from('complaints')
-    .select('id, category_id, description, location, status, created_at')
-    .order('created_at', { ascending: false });
+  const complaints = await api.get<Complaint[]>('/api/admin/complaints');
 
   const counts: Record<string, number> = {};
   complaintCategories.forEach(c => { counts[c.id] = 0; });
-  complaints?.forEach(c => { if (counts[c.category_id] !== undefined) counts[c.category_id]++; });
+  complaints?.forEach(c => { if (counts[c.categoryId] !== undefined) counts[c.categoryId]++; });
 
   return (
     <div>
@@ -40,13 +36,13 @@ export default async function AdminPengaduanPage() {
               <div key={c.id} className="border border-[var(--color-border)] rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs px-2 py-0.5 rounded bg-[var(--color-primary-tint)] text-[var(--color-primary)] font-medium">
-                    {complaintCategories.find(cat => cat.id === c.category_id)?.name || c.category_id}
+                    {complaintCategories.find(cat => cat.id === c.categoryId)?.name || c.categoryId}
                   </span>
                   <StatusBadge status={c.status} />
                 </div>
                 <p className="text-sm mb-1">{c.description}</p>
                 {c.location && <p className="text-xs text-[var(--color-text-muted)]">Lokasi: {c.location}</p>}
-                <p className="text-xs text-[var(--color-text-muted)] mt-1">{new Date(c.created_at).toLocaleDateString('id-ID')}</p>
+                <p className="text-xs text-[var(--color-text-muted)] mt-1">{new Date(c.createdAt).toLocaleDateString('id-ID')}</p>
               </div>
             ))}
           </div>

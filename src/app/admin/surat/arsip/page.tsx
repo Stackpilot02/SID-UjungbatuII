@@ -1,20 +1,16 @@
-import { createAdminClient } from '@/lib/supabase-admin';
+import { api } from '@/lib/api-client';
 import Card from '@/components/Card';
 import { letterTypes } from '@/data/mock-data';
+import type { ArchivedLetter } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminArsipSuratPage() {
-  const supabase = createAdminClient();
-
-  const { data: letters } = await supabase
-    .from('letters')
-    .select('id, letter_number, letter_type_id, issued_at')
-    .order('issued_at', { ascending: false });
+  const letters = await api.get<ArchivedLetter[]>('/api/admin/letters/archive');
 
   const counts: Record<string, number> = {};
   letterTypes.forEach(lt => { counts[lt.id] = 0; });
-  letters?.forEach(l => { if (counts[l.letter_type_id] !== undefined) counts[l.letter_type_id]++; });
+  letters?.forEach(l => { if (counts[l.letterTypeId] !== undefined) counts[l.letterTypeId]++; });
 
   return (
     <div>
@@ -45,9 +41,9 @@ export default async function AdminArsipSuratPage() {
             <tbody>
               {letters.map((l) => (
                 <tr key={l.id} className="border-b border-[var(--color-border)] last:border-0">
-                  <td className="px-4 py-3 font-mono-data text-xs">{l.letter_number}</td>
-                  <td className="px-4 py-3">{letterTypes.find(lt => lt.id === l.letter_type_id)?.name || l.letter_type_id}</td>
-                  <td className="px-4 py-3 text-[var(--color-text-muted)]">{new Date(l.issued_at).toLocaleDateString('id-ID')}</td>
+                  <td className="px-4 py-3 font-mono-data text-xs">{l.letterNumber}</td>
+                  <td className="px-4 py-3">{letterTypes.find(lt => lt.id === l.letterTypeId)?.name || l.letterTypeId}</td>
+                  <td className="px-4 py-3 text-[var(--color-text-muted)]">{new Date(l.issuedAt).toLocaleDateString('id-ID')}</td>
                 </tr>
               ))}
             </tbody>

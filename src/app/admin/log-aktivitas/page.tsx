@@ -1,16 +1,11 @@
-import { createAdminClient } from '@/lib/supabase-admin';
+import { api } from '@/lib/api-client';
 import Card from '@/components/Card';
+import type { ActivityLog } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminLogAktivitasPage() {
-  const supabase = createAdminClient();
-
-  const { data: logs } = await supabase
-    .from('activity_logs')
-    .select('id, action, table_name, created_at')
-    .order('created_at', { ascending: false })
-    .limit(50);
+  const logs = await api.get<ActivityLog[]>('/api/admin/activity-logs');
 
   return (
     <div>
@@ -29,8 +24,8 @@ export default async function AdminLogAktivitasPage() {
             {logs.map((log) => (
               <div key={log.id} className="flex items-center gap-3 text-sm border-b border-[var(--color-border)] last:border-0 py-2">
                 <span className="text-xs px-2 py-0.5 rounded bg-[var(--color-primary-tint)] text-[var(--color-primary)] font-medium uppercase">{log.action}</span>
-                <span className="text-[var(--color-text-muted)]">{log.table_name}</span>
-                <span className="ml-auto text-xs text-[var(--color-text-muted)]">{new Date(log.created_at).toLocaleString('id-ID')}</span>
+                <span className="text-[var(--color-text-muted)]">{log.tableName}</span>
+                <span className="ml-auto text-xs text-[var(--color-text-muted)]">{new Date(log.createdAt).toLocaleString('id-ID')}</span>
               </div>
             ))}
           </div>

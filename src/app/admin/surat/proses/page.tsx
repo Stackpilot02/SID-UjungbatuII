@@ -1,19 +1,14 @@
-import { createAdminClient } from '@/lib/supabase-admin';
+import { api } from '@/lib/api-client';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import StatusBadge from '@/components/StatusBadge';
 import { letterTypes } from '@/data/mock-data';
+import type { LetterRequest } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminProsesSuratPage() {
-  const supabase = createAdminClient();
-
-  const { data: requests } = await supabase
-    .from('letter_requests')
-    .select('id, letter_type_id, purpose, status, created_at')
-    .in('status', ['pending', 'verified'])
-    .order('created_at', { ascending: false });
+  const requests = await api.get<LetterRequest[]>('/api/admin/letter-requests');
 
   return (
     <div>
@@ -35,9 +30,9 @@ export default async function AdminProsesSuratPage() {
             {requests.map((r) => (
               <div key={r.id} className="border border-[var(--color-border)] rounded-lg p-4 flex items-center justify-between">
                 <div>
-                  <div className="font-medium text-sm">{letterTypes.find(lt => lt.id === r.letter_type_id)?.name || r.letter_type_id}</div>
-                  <div className="text-xs text-[var(--color-text-muted)]">{r.purpose}</div>
-                  <div className="text-xs text-[var(--color-text-muted)]">{new Date(r.created_at).toLocaleDateString('id-ID')}</div>
+                  <div className="font-medium text-sm">{letterTypes.find(lt => lt.id === r.letterTypeId)?.name || r.letterTypeId}</div>
+                  <div className="text-xs text-[var(--color-text-muted)]">{r.requesterName} — {r.purpose}</div>
+                  <div className="text-xs text-[var(--color-text-muted)]">{new Date(r.createdAt).toLocaleDateString('id-ID')}</div>
                 </div>
                 <div className="flex items-center gap-2">
                   <StatusBadge status={r.status} />
