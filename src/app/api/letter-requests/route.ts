@@ -1,11 +1,36 @@
 import { success, error } from '@/lib/api-utils';
+import { letterRequests, addLetterRequest } from '@/data/mock-data';
+import { isValidNik, isValidPhone, isValidEmail } from '@/lib/validation';
 
 export async function GET() {
-  return success([]);
+  return success(letterRequests);
 }
 
 export async function POST(request: Request) {
-  const body = await request.json();
-  if (!body.letter_type_id || !body.purpose) return error('letter_type_id and purpose required');
-  return success({ id: 'mock-' + Date.now(), ...body, status: 'pending', created_at: new Date().toISOString() }, 201);
+  try {
+    const body = await request.json();
+    const { letterTypeId, requesterName, requesterNik, phone, email, purpose, additionalData } = body ?? {};
+
+    if (!letterTypeId) return error('Jenis surat wajib dipilih');
+    if (!requesterName?.trim()) return error('Nama lengkap wajib diisi');
+    if (!isValidNik(requesterNik ?? '')) return error('NIK wajib 16 digit angka');
+    if (phone && !isValidPhone(phone)) return error('Format nomor telepon tidak valid');
+    if (email && !isValidEmail(email)) return error('Format email tidak valid');
+    if (!purpose?.trim()) return error('Keperluan surat wajib diisi');
+
+    const record = addLetterRequest({
+      letterTypeId,
+      requesterName: requesterName.trim(),
+      requesterNik: requesterNik.trim(),
+      phone: (phone ?? '').trim(),
+      email: (email ?? '').trim(),
+      purpose: purpose.trim(),
+      additionalData: additionalData ?? {},
+    });
+
+    return success(record, 201);
+  } catch (err) {
+    console.error('Simpan pengajuan surat gagal:', err);
+    return error('Gagal menyimpan pengajuan', 500);
+  }
 }

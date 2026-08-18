@@ -17,22 +17,31 @@ export default function LayananSuratPage() {
             <p className="text-xs text-[var(--color-text-muted)] mb-1 font-mono-data">{lt.code}</p>
             {lt.requiresAttachment && <p className="text-xs text-[var(--color-accent-clay)] mb-4">* Perlu lampiran</p>}
             <div className="mt-auto pt-4">
-              <Button href="/auth/login" variant="primary" className="w-full text-sm">Ajukan</Button>
+              <Button href={`/desa/layanan-surat/ajukan?letterTypeId=${lt.id}`} variant="primary" className="w-full text-sm">Ajukan</Button>
             </div>
           </Card>
         ))}
       </div>
 
-      <Card className="bg-[var(--color-primary-tint)] border-0">
-        <h2 className="text-[22px] font-semibold mb-3">Cara Mengajukan Surat</h2>
-        <ol className="list-decimal list-inside space-y-2 text-sm text-[var(--color-text-muted)]">
-          <li>Login atau daftar akun terlebih dahulu</li>
-          <li>Pilih jenis surat yang dibutuhkan</li>
-          <li>Isi form pengajuan dan unggah dokumen pendukung (jika diperlukan)</li>
-          <li>Tunggu verifikasi dari operator desa</li>
-          <li>Setelah disetujui, unduh surat dalam format PDF</li>
-        </ol>
-      </Card>
+      <div className="flex flex-col md:flex-row gap-4 mb-12">
+        <Card className="bg-[var(--color-primary-tint)] border-0 flex-1">
+          <h2 className="text-[22px] font-semibold mb-3">Cara Mengajukan Surat</h2>
+          <ol className="list-decimal list-inside space-y-2 text-sm text-[var(--color-text-muted)]">
+            <li>Pilih jenis surat yang dibutuhkan</li>
+            <li>Isi form pengajuan dan unggah dokumen pendukung (jika diperlukan)</li>
+            <li>Simpan nomor referensi yang diberikan</li>
+            <li>Tunggu verifikasi dari operator desa</li>
+            <li>Setelah disetujui, unduh surat dalam format PDF</li>
+          </ol>
+        </Card>
+        <Card className="flex flex-col justify-center flex-1">
+          <h2 className="text-[22px] font-semibold mb-2">Sudah Mengajukan?</h2>
+          <p className="text-sm text-[var(--color-text-muted)] mb-5">
+            Lacak status pengajuan surat Anda dengan nomor referensi yang diterima saat mengajukan.
+          </p>
+          <Button href="/desa/layanan-surat/status" variant="secondary" className="self-start">Cek Status Pengajuan</Button>
+        </Card>
+      </div>
     </div>
   );
 }
