@@ -1,10 +1,9 @@
 'use client';
 
-import { useState, FormEvent, use } from 'react';
+import { useState, FormEvent, useEffect, use } from 'react';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import { Label, Input, Textarea, Select, FieldError } from '@/components/form';
-import { letterTypes } from '@/data/mock-data';
 import { isValidNik, isValidPhone, isValidEmail } from '@/lib/validation';
 
 export default function AjukanSuratPage({
@@ -13,12 +12,9 @@ export default function AjukanSuratPage({
   searchParams: Promise<{ letterTypeId?: string }>;
 }) {
   const params = use(searchParams);
-  const initialType = params.letterTypeId && letterTypes.some((lt) => lt.id === params.letterTypeId)
-    ? params.letterTypeId
-    : '';
-
+  const [letterTypes, setLetterTypes] = useState<{ id: string; name: string; code: string; requiresAttachment: boolean }[]>([]);
   const [form, setForm] = useState({
-    letterTypeId: initialType,
+    letterTypeId: '',
     requesterName: '',
     requesterNik: '',
     phone: '',
@@ -28,6 +24,22 @@ export default function AjukanSuratPage({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ id: string } | null>(null);
+
+  useEffect(() => {
+    fetch('/api/letter-types')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success) {
+          setLetterTypes(json.data);
+          const pre = params.letterTypeId && json.data.some((lt: { id: string }) => lt.id === params.letterTypeId)
+            ? params.letterTypeId
+            : '';
+          if (pre) setForm((f) => ({ ...f, letterTypeId: pre }));
+        }
+      })
+      .catch(() => setLetterTypes([]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const set = (key: keyof typeof form, value: string) => {
     setForm((f) => ({ ...f, [key]: value }));

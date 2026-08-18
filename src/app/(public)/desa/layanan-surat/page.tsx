@@ -1,8 +1,11 @@
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { letterTypes } from '@/data/mock-data';
+import { getLetterTypes } from '@/lib/supabase-store';
 
-export default function LayananSuratPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function LayananSuratPage() {
+  const letterTypes = await getLetterTypes();
   return (
     <div className="max-w-[1200px] mx-auto px-4 py-12">
       <h1 className="text-[32px] font-bold mb-4">Layanan Surat Online</h1>

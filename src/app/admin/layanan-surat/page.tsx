@@ -1,13 +1,16 @@
 import { api } from '@/lib/api-client';
 import Card from '@/components/Card';
 import StatusBadge from '@/components/StatusBadge';
-import { letterTypes } from '@/data/mock-data';
+import { getLetterTypes } from '@/lib/supabase-store';
 import type { LetterRequest } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminLayananSuratPage() {
-  const requests = await api.get<LetterRequest[]>('/api/admin/letter-requests');
+  const [requests, letterTypes] = await Promise.all([
+    api.get<LetterRequest[]>('/api/admin/letter-requests'),
+    getLetterTypes(),
+  ]);
 
   return (
     <div>

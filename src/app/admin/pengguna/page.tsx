@@ -1,6 +1,6 @@
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { users } from '@/data/mock-data';
+import { getUsers } from '@/lib/supabase-store';
 
 const roleLabels: Record<string, string> = {
   warga: 'Warga',
@@ -9,7 +9,11 @@ const roleLabels: Record<string, string> = {
   kepala_desa: 'Kepala Desa',
 };
 
-export default function AdminPenggunaPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function AdminPenggunaPage() {
+  const users = await getUsers();
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">

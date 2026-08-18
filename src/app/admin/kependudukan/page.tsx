@@ -1,9 +1,13 @@
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { residents } from '@/data/mock-data';
+import { getResidents } from '@/lib/supabase-store';
 import DeleteResidentButton from './delete-resident-button';
 
-export default function AdminKependudukanPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function AdminKependudukanPage() {
+  const residents = await getResidents();
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">

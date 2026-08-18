@@ -1,13 +1,16 @@
 import { api } from '@/lib/api-client';
 import Card from '@/components/Card';
 import StatusBadge from '@/components/StatusBadge';
-import { complaintCategories } from '@/data/mock-data';
+import { getComplaintCategories } from '@/lib/supabase-store';
 import type { Complaint } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminPengaduanPage() {
-  const complaints = await api.get<Complaint[]>('/api/admin/complaints');
+  const [complaints, complaintCategories] = await Promise.all([
+    api.get<Complaint[]>('/api/admin/complaints'),
+    getComplaintCategories(),
+  ]);
 
   const counts: Record<string, number> = {};
   complaintCategories.forEach(c => { counts[c.id] = 0; });

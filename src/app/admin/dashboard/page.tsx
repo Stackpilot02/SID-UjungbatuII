@@ -1,20 +1,23 @@
 import Card from '@/components/Card';
 import { api } from '@/lib/api-client';
-import { stats } from '@/data/mock-data';
+import { getStats } from '@/lib/supabase-store';
 import { formatDateShort } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboardPage() {
-  const data = await api.get<{
-    totalResidents: number;
-    pendingRequests: number;
-    pendingComplaints: number;
-    recentActivity: { id: string; action: string; tableName: string; description: string; createdAt: string }[];
-  }>('/api/admin/dashboard').catch(() => null);
+  const [data, stats] = await Promise.all([
+    api.get<{
+      totalResidents: number;
+      pendingRequests: number;
+      pendingComplaints: number;
+      recentActivity: { id: string; action: string; tableName: string; description: string; createdAt: string }[];
+    }>('/api/admin/dashboard').catch(() => null),
+    getStats().catch(() => null),
+  ]);
 
   const cards = [
-    { label: 'Total Penduduk', value: data?.totalResidents ?? stats.totalPopulation, color: 'var(--color-primary)' },
+    { label: 'Total Penduduk', value: data?.totalResidents ?? stats?.totalPopulation ?? 0, color: 'var(--color-primary)' },
     { label: 'Pengajuan Surat Diproses', value: data?.pendingRequests ?? 0, color: 'var(--color-success)' },
     { label: 'Pengaduan Masuk', value: data?.pendingComplaints ?? 0, color: 'var(--color-accent-clay)' },
     { label: 'Pengajuan Menunggu', value: data?.pendingRequests ?? 0, color: 'var(--color-warning)' },
@@ -36,14 +39,14 @@ export default async function AdminDashboardPage() {
         <Card>
           <h2 className="text-[22px] font-semibold mb-4">Statistik Pekerjaan</h2>
           <div className="space-y-4">
-            {stats.occupationStats.map((o) => (
+            {stats?.occupationStats.map((o) => (
               <div key={o.name}>
                 <div className="flex justify-between text-sm mb-1">
                   <span className="font-medium">{o.name}</span>
                   <span className="text-[var(--color-text-muted)]">{o.count} orang</span>
                 </div>
                 <div className="h-2 bg-[var(--color-border)] rounded-full overflow-hidden">
-                  <div className="h-full bg-[var(--color-primary)] rounded-full" style={{ width: `${(o.count / stats.totalPopulation) * 100}%` }} />
+                  <div className="h-full bg-[var(--color-primary)] rounded-full" style={{ width: `${(o.count / (stats?.totalPopulation || 1)) * 100}%` }} />
                 </div>
               </div>
             ))}

@@ -1,18 +1,27 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import { Label, Input, Textarea, Select } from '@/components/form';
-import { complaintCategories } from '@/data/mock-data';
 
 export default function PengaduanPage() {
+  const [complaintCategories, setComplaintCategories] = useState<{ id: string; name: string; defaultSlaDays: number }[]>([]);
   const [categoryId, setCategoryId] = useState('');
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/complaint-categories')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success) setComplaintCategories(json.data);
+      })
+      .catch(() => setComplaintCategories([]));
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();

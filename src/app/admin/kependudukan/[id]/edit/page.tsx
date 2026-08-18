@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation';
 import ResidentForm from '../../baru/resident-form';
+import { getResidentById } from '@/lib/supabase-store';
 
 export default async function AdminKependudukanEditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { residents } = await import('@/data/mock-data');
-  const item = residents.find((r) => r.id === id);
+  const item = await getResidentById(id);
   if (!item) notFound();
 
   return (

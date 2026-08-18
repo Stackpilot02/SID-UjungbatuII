@@ -1,11 +1,10 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import { Label, Input, Select, Textarea, FieldError } from '@/components/form';
-import { letterTypes } from '@/data/mock-data';
 
 type TemplateFormState = {
   id?: string;
@@ -18,6 +17,7 @@ type TemplateFormState = {
 
 export default function TemplateForm({ initialData }: { initialData?: Partial<TemplateFormState> }) {
   const router = useRouter();
+  const [letterTypes, setLetterTypes] = useState<{ id: string; name: string; code: string }[]>([]);
   const [form, setForm] = useState<TemplateFormState>({
     letterTypeId: '',
     name: '',
@@ -28,6 +28,15 @@ export default function TemplateForm({ initialData }: { initialData?: Partial<Te
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/letter-types')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success) setLetterTypes(json.data);
+      })
+      .catch(() => setLetterTypes([]));
+  }, []);
 
   const isEdit = Boolean(initialData?.id);
 
