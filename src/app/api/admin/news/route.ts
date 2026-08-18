@@ -1,8 +1,14 @@
 import { success, error } from '@/lib/api-utils';
-import { news, addNews, updateNews, deleteNews } from '@/data/mock-data';
+import { getNews, addNews, updateNews, deleteNews, isNewsSlugTaken } from '@/lib/supabase-store';
 
 export async function GET() {
-  return success(news);
+  try {
+    const data = await getNews();
+    return success(data);
+  } catch (err) {
+    console.error('Ambil berita gagal:', err);
+    return error('Gagal mengambil data berita', 500);
+  }
 }
 
 export async function POST(request: Request) {
@@ -16,8 +22,9 @@ export async function POST(request: Request) {
     if (!content?.trim()) return error('Isi berita wajib diisi');
     if (!['draft', 'published'].includes(status ?? 'published')) return error('Status tidak valid');
     if (coverImageUrl && typeof coverImageUrl !== 'string') return error('URL foto tidak valid');
+    if (await isNewsSlugTaken(slug)) return error('Slug sudah digunakan');
 
-    const record = addNews({
+    const record = await addNews({
       title: title.trim(),
       slug: slug.trim(),
       category: category.trim(),
@@ -51,6 +58,7 @@ export async function PATCH(request: Request) {
     if (content !== undefined && !content.trim()) return error('Isi berita wajib diisi');
     if (status !== undefined && !['draft', 'published'].includes(status)) return error('Status tidak valid');
     if (coverImageUrl !== undefined && typeof coverImageUrl !== 'string') return error('URL foto tidak valid');
+    if (slug !== undefined && (await isNewsSlugTaken(slug, id))) return error('Slug sudah digunakan');
 
     const patch: Record<string, unknown> = {};
     if (title !== undefined) patch.title = title.trim();
@@ -62,7 +70,7 @@ export async function PATCH(request: Request) {
     if (status !== undefined) patch.status = status;
     if (publishedAt !== undefined) patch.publishedAt = publishedAt;
 
-    const record = updateNews(id, patch);
+    const record = await updateNews(id, patch);
     if (!record) return error('Berita tidak ditemukan', 404);
     return success(record);
   } catch (err) {
@@ -77,7 +85,7 @@ export async function DELETE(request: Request) {
     const id = searchParams.get('id');
     if (!id) return error('Missing id');
 
-    const ok = deleteNews(id);
+    const ok = await deleteNews(id);
     if (!ok) return error('Berita tidak ditemukan', 404);
     return success({ id, deleted: true });
   } catch (err) {

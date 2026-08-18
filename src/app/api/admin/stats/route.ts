@@ -1,8 +1,5 @@
 import { success, error } from '@/lib/api-utils';
-import { stats, updateStats } from '@/data/mock-data';
-
-// TODO: konfirmasi — pembaruan statistik sementara di memori (mock).
-// Integrasi final menyimpan ke tabel stats di Supabase.
+import { getStats, updateStats } from '@/lib/supabase-store';
 
 function isNonNegativeInt(value: unknown): boolean {
   return typeof value === 'number' && Number.isInteger(value) && value >= 0;
@@ -43,7 +40,7 @@ export async function PUT(request: Request) {
     if (!isValidLabelList(body?.occupationStats)) return error('Data pekerjaan tidak valid');
     if (!isValidLabelList(body?.religionStats)) return error('Data agama tidak valid');
 
-    const updated = updateStats({
+    const updated = await updateStats({
       totalPopulation,
       maleCount,
       femaleCount,
@@ -60,5 +57,11 @@ export async function PUT(request: Request) {
 }
 
 export async function GET() {
-  return success(stats);
+  try {
+    const data = await getStats();
+    return success(data);
+  } catch (err) {
+    console.error('Ambil statistik gagal:', err);
+    return error('Gagal mengambil data statistik', 500);
+  }
 }

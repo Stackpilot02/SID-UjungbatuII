@@ -1,11 +1,23 @@
 import { success, error } from '@/lib/api-utils';
-import { residents, addResident, updateResident, deleteResident } from '@/data/mock-data';
+import {
+  getResidents,
+  addResident,
+  updateResident,
+  deleteResident,
+  isNikTaken,
+} from '@/lib/supabase-store';
 import { isValidNik, isValidKkNumber, isNotFutureDate } from '@/lib/validation';
 
 const genderOptions = ['Laki-laki', 'Perempuan'];
 
 export async function GET() {
-  return success(residents);
+  try {
+    const data = await getResidents();
+    return success(data);
+  } catch (err) {
+    console.error('Ambil penduduk gagal:', err);
+    return error('Gagal mengambil data penduduk', 500);
+  }
 }
 
 export async function POST(request: Request) {
@@ -17,7 +29,7 @@ export async function POST(request: Request) {
     } = body ?? {};
 
     if (!isValidNik(nik ?? '')) return error('NIK wajib 16 digit angka');
-    if (residents.some((r) => r.nik === nik)) return error('NIK sudah terdaftar');
+    if (await isNikTaken(nik)) return error('NIK sudah terdaftar');
     if (!isValidKkNumber(kkNumber ?? '')) return error('Nomor KK wajib 16 digit angka');
     if (!fullName?.trim()) return error('Nama lengkap wajib diisi');
     if (!birthPlace?.trim()) return error('Tempat lahir wajib diisi');
@@ -25,7 +37,7 @@ export async function POST(request: Request) {
     if (!genderOptions.includes(gender)) return error('Jenis kelamin tidak valid');
     if (!occupation?.trim()) return error('Pekerjaan wajib diisi');
 
-    const record = addResident({
+    const record = await addResident({
       nik: nik.trim(),
       kkNumber: kkNumber.trim(),
       fullName: fullName.trim(),
@@ -51,15 +63,12 @@ export async function PATCH(request: Request) {
     const id = searchParams.get('id');
     if (!id) return error('Missing id');
 
-    const existing = residents.find((r) => r.id === id);
-    if (!existing) return error('Penduduk tidak ditemukan', 404);
-
     const body = await request.json();
     const { nik, kkNumber, fullName, birthPlace, birthDate, gender, occupation, religion, maritalStatus, familyRole } = body ?? {};
 
     if (nik !== undefined) {
       if (!isValidNik(nik)) return error('NIK wajib 16 digit angka');
-      if (residents.some((r) => r.nik === nik && r.id !== id)) return error('NIK sudah terdaftar');
+      if (await isNikTaken(nik, id)) return error('NIK sudah terdaftar');
     }
     if (kkNumber !== undefined && !isValidKkNumber(kkNumber)) return error('Nomor KK wajib 16 digit angka');
     if (fullName !== undefined && !fullName.trim()) return error('Nama lengkap wajib diisi');
@@ -80,7 +89,8 @@ export async function PATCH(request: Request) {
     if (maritalStatus !== undefined) patch.maritalStatus = maritalStatus.trim();
     if (familyRole !== undefined) patch.familyRole = familyRole.trim();
 
-    const record = updateResident(id, patch);
+    const record = await updateResident(id, patch);
+    if (!record) return error('Penduduk tidak ditemukan', 404);
     return success(record);
   } catch (err) {
     console.error('Perbarui penduduk gagal:', err);
@@ -94,7 +104,7 @@ export async function DELETE(request: Request) {
     const id = searchParams.get('id');
     if (!id) return error('Missing id');
 
-    const ok = deleteResident(id);
+    const ok = await deleteResident(id);
     if (!ok) return error('Penduduk tidak ditemukan', 404);
     return success({ id, deleted: true });
   } catch (err) {

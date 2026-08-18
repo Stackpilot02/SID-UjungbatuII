@@ -1,14 +1,30 @@
 import { success, error } from '@/lib/api-utils';
-import { letterTypes, letterTemplates, addLetterTemplate, updateLetterTemplate, deleteLetterTemplate } from '@/data/mock-data';
+import {
+  getLetterTypes,
+  getLetterTemplates,
+  addLetterTemplate,
+  updateLetterTemplate,
+  deleteLetterTemplate,
+} from '@/lib/supabase-store';
 
 export async function GET() {
-  return success(letterTemplates);
+  try {
+    const [letterTypes, templates] = await Promise.all([
+      getLetterTypes(),
+      getLetterTemplates(),
+    ]);
+    return success(templates.map((t) => ({ ...t, letterType: letterTypes.find((lt) => lt.id === t.letterTypeId)?.name ?? t.letterTypeId })));
+  } catch (err) {
+    console.error('Ambil template surat gagal:', err);
+    return error('Gagal mengambil data template surat', 500);
+  }
 }
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { letterTypeId, name, numberFormat, bodyTemplate, isActive } = body ?? {};
+    const letterTypes = await getLetterTypes();
 
     if (!letterTypeId) return error('Jenis surat wajib dipilih');
     if (!letterTypes.some((lt) => lt.id === letterTypeId)) return error('Jenis surat tidak valid');
@@ -16,7 +32,7 @@ export async function POST(request: Request) {
     if (!numberFormat?.trim()) return error('Format nomor surat wajib diisi');
     if (!bodyTemplate?.trim()) return error('Isi template wajib diisi');
 
-    const record = addLetterTemplate({
+    const record = await addLetterTemplate({
       letterTypeId,
       name: name.trim(),
       numberFormat: numberFormat.trim(),
@@ -41,6 +57,7 @@ export async function PATCH(request: Request) {
     const { letterTypeId, name, numberFormat, bodyTemplate, isActive } = body ?? {};
 
     if (letterTypeId !== undefined) {
+      const letterTypes = await getLetterTypes();
       if (!letterTypeId) return error('Jenis surat wajib dipilih');
       if (!letterTypes.some((lt) => lt.id === letterTypeId)) return error('Jenis surat tidak valid');
     }
@@ -55,7 +72,7 @@ export async function PATCH(request: Request) {
     if (bodyTemplate !== undefined) patch.bodyTemplate = bodyTemplate.trim();
     if (isActive !== undefined) patch.isActive = isActive;
 
-    const record = updateLetterTemplate(id, patch);
+    const record = await updateLetterTemplate(id, patch);
     if (!record) return error('Template tidak ditemukan', 404);
     return success(record);
   } catch (err) {
@@ -70,7 +87,7 @@ export async function DELETE(request: Request) {
     const id = searchParams.get('id');
     if (!id) return error('Missing id');
 
-    const ok = deleteLetterTemplate(id);
+    const ok = await deleteLetterTemplate(id);
     if (!ok) return error('Template tidak ditemukan', 404);
     return success({ id, deleted: true });
   } catch (err) {

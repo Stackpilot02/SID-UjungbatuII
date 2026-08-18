@@ -1,6 +1,12 @@
-import { success } from '@/lib/api-utils';
-import { archivedLetters } from '@/data/mock-data';
+import { success, error } from '@/lib/api-utils';
+import { getArchivedLetters } from '@/lib/supabase-store';
 
 export async function GET() {
-  return success(archivedLetters);
+  try {
+    const data = await getArchivedLetters();
+    return success(data);
+  } catch (err) {
+    console.error('Ambil arsip surat gagal:', err);
+    return error('Gagal mengambil data arsip surat', 500);
+  }
 }
