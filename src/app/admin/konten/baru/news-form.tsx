@@ -7,6 +7,7 @@ import Card from '@/components/Card';
 import Button from '@/components/Button';
 
 type FormState = {
+  id?: string;
   title: string;
   slug: string;
   category: string;
@@ -30,7 +31,7 @@ const inputClass =
   'w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors';
 const labelClass = 'block text-sm font-medium mb-1.5 text-[var(--color-text)]';
 
-export default function NewsForm() {
+export default function NewsForm({ initialData }: { initialData?: Partial<FormState> }) {
   const router = useRouter();
   const [form, setForm] = useState<FormState>({
     title: '',
@@ -41,10 +42,13 @@ export default function NewsForm() {
     status: 'published',
     coverImageUrl: '',
     publishedAt: '',
+    ...initialData,
   });
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  const isEdit = Boolean(initialData?.id);
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setForm((f) => ({ ...f, [key]: value }));
@@ -80,8 +84,8 @@ export default function NewsForm() {
     setSaving(true);
     setErrorMsg('');
     try {
-      const res = await fetch('/api/admin/news', {
-        method: 'POST',
+      const res = await fetch(isEdit && form.id ? `/api/admin/news?id=${form.id}` : '/api/admin/news', {
+        method: isEdit ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, publishedAt: form.publishedAt || undefined }),
       });
@@ -99,12 +103,12 @@ export default function NewsForm() {
     <form onSubmit={handleSubmit}>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-[28px] font-bold">Buat Berita</h1>
+          <h1 className="text-[28px] font-bold">{isEdit ? 'Edit Berita' : 'Buat Berita'}</h1>
           <p className="text-sm text-[var(--color-text-muted)] mt-1">Lengkapi informasi dan unggah foto cover berita.</p>
         </div>
         <div className="flex items-center gap-3">
           <Button type="button" variant="secondary" href="/admin/konten">Batal</Button>
-          <Button type="submit" disabled={saving}>{saving ? 'Menyimpan...' : 'Simpan Berita'}</Button>
+          <Button type="submit" disabled={saving}>{saving ? 'Menyimpan...' : isEdit ? 'Simpan Perubahan' : 'Simpan Berita'}</Button>
         </div>
       </div>
 

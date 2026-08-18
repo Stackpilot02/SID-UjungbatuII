@@ -3,6 +3,9 @@ import StatusBadge from '@/components/StatusBadge';
 import Button from '@/components/Button';
 import { news } from '@/data/mock-data';
 import { formatDateShort } from '@/lib/utils';
+import DeleteNewsButton from './delete-news-button';
+
+export const dynamic = 'force-dynamic';
 
 export default function AdminKontenPage() {
   return (
@@ -29,7 +32,12 @@ export default function AdminKontenPage() {
                 <td className="px-4 py-3"><span className="text-xs px-2 py-0.5 rounded bg-[var(--color-primary-tint)] text-[var(--color-primary)]">{item.category}</span></td>
                 <td className="px-4 py-3"><StatusBadge status={item.status} /></td>
                 <td className="px-4 py-3 text-[var(--color-text-muted)]">{formatDateShort(item.publishedAt)}</td>
-                <td className="px-4 py-3"><button className="text-[var(--color-primary)] hover:underline text-xs">Edit</button></td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-3">
+                    <a href={`/admin/konten/${item.id}/edit`} className="text-[var(--color-primary)] hover:underline text-xs">Edit</a>
+                    <DeleteNewsButton id={item.id} title={item.title} />
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
