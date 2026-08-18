@@ -1,12 +1,15 @@
 import { api } from '@/lib/api-client';
 import Card from '@/components/Card';
-import { letterTypes } from '@/data/mock-data';
+import { getLetterTypes } from '@/lib/supabase-store';
 import type { ArchivedLetter } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminArsipSuratPage() {
-  const letters = await api.get<ArchivedLetter[]>('/api/admin/letters/archive');
+  const [letters, letterTypes] = await Promise.all([
+    api.get<ArchivedLetter[]>('/api/admin/letters/archive'),
+    getLetterTypes(),
+  ]);
 
   const counts: Record<string, number> = {};
   letterTypes.forEach(lt => { counts[lt.id] = 0; });

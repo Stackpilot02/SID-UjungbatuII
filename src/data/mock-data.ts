@@ -1,3 +1,10 @@
+// Helper: menghasilkan id unik untuk mock store (cek test store).
+let mockSeq = 0;
+function mockId(prefix = 'mock') {
+  mockSeq += 1;
+  return `${prefix}-${Date.now()}-${mockSeq}`;
+}
+
 export const villageProfile = {
   villageName: "Desa Ujungbatu II",
   district: "Kec. Hutaraja Tinggi",
@@ -83,7 +90,7 @@ export const news: Array<{
 export function addNews(item: Omit<(typeof news)[number], 'id' | 'createdAt'>) {
   const record = {
     ...item,
-    id: 'mock-' + Date.now(),
+    id: mockId(),
     createdAt: new Date().toISOString(),
   };
   news.push(record);
@@ -117,7 +124,7 @@ export const galleryItems = [
 ];
 
 export function addGalleryItem(item: Omit<(typeof galleryItems)[number], 'id'>) {
-  const record = { ...item, id: 'mock-' + Date.now() };
+  const record = { ...item, id: mockId() };
   galleryItems.push(record);
   return record;
 }
@@ -152,7 +159,7 @@ export const complaints: Array<{
 // TODO: konfirmasi — penyimpanan pengaduan sementara di memori (mock).
 // Integrasi final menyimpan ke tabel complaints di Supabase (schema.md §3.8).
 export function addComplaint(item: Omit<(typeof complaints)[number], 'id' | 'status' | 'createdAt'>) {
-  const record = { ...item, id: 'mock-' + Date.now(), status: 'pending', createdAt: new Date().toISOString() };
+  const record = { ...item, id: mockId(), status: 'pending', createdAt: new Date().toISOString() };
   complaints.push(record);
   return record;
 }
@@ -171,7 +178,7 @@ export const activityLogs: Array<{
 // TODO: konfirmasi — penyimpanan log aktivitas sementara di memori (mock).
 // Integrasi final menyimpan ke tabel activity_logs di Supabase (schema.md §3.14).
 export function addActivityLog(item: Omit<(typeof activityLogs)[number], 'id' | 'createdAt'>) {
-  const record = { ...item, id: 'mock-' + Date.now(), createdAt: new Date().toISOString() };
+  const record = { ...item, id: mockId(), createdAt: new Date().toISOString() };
   activityLogs.push(record);
   return record;
 }
@@ -189,7 +196,7 @@ export const archivedLetters: Array<{
 // TODO: konfirmasi — penyimpanan arsip surat sementara di memori (mock).
 // Integrasi final menyimpan ke tabel letters di Supabase (schema.md §3.12).
 export function addArchivedLetter(item: Omit<(typeof archivedLetters)[number], 'id'>) {
-  const record = { ...item, id: 'mock-' + Date.now() };
+  const record = { ...item, id: mockId() };
   archivedLetters.push(record);
   return record;
 }
@@ -219,7 +226,7 @@ export const users: Array<{
 // TODO: konfirmasi — penyimpanan pengguna sementara di memori (mock).
 // Integrasi final menyimpan ke tabel profiles di Supabase (schema.md §3.1).
 export function addUser(item: Omit<(typeof users)[number], 'id'>) {
-  const record = { ...item, id: 'mock-' + Date.now() };
+  const record = { ...item, id: mockId() };
   users.push(record);
   return record;
 }
@@ -262,7 +269,7 @@ export function addLetterTemplate(
 ) {
   const record = {
     ...item,
-    id: 'mock-' + Date.now(),
+    id: mockId(),
     version: 1,
     createdAt: new Date().toISOString(),
   };
@@ -294,7 +301,7 @@ export function addLetterRequest(
 ) {
   const record = {
     ...item,
-    id: 'LR-' + Date.now(),
+    id: mockId('LR'),
     status: 'pending',
     createdAt: new Date().toISOString(),
   };
@@ -325,7 +332,7 @@ export const residents: Array<{
 // TODO: konfirmasi — penyimpanan penduduk sementara di memori (mock).
 // Integrasi final menyimpan ke tabel residents di Supabase (schema.md §3.2).
 export function addResident(item: Omit<(typeof residents)[number], 'id'>) {
-  const record = { ...item, id: 'mock-' + Date.now() };
+  const record = { ...item, id: mockId() };
   residents.push(record);
   return record;
 }

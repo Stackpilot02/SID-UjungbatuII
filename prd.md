@@ -238,6 +238,7 @@ Detail permission per aksi dan aturan eskalasi ada di **`rules.md`** §2.
   - ✅ Halaman admin layanan surat, proses surat, arsip, pengaduan, dan log aktivitas dialihkan dari Supabase langsung ke mock store via API (data tampil nyata meski tanpa koneksi Supabase)
   - ✅ Statistik: halaman admin pengaturan data statistik (`/admin/statistik` + API `PUT /api/admin/stats`), kartu statistik home memakai animasi count-up (8 kartu), pengelompokan "dusun" dihapus karena desa asli satu wilayah
   - ✅ CRUD konten admin (kontrol penuh konten halaman publik): tambah/edit/hapus berita, tambah/hapus galeri (upload lokal), tambah/edit/hapus penduduk, tambah/edit/hapus template surat (versi naik otomatis saat edit), tambah/edit pengguna — 61 test lulus
+  - ✅ Integrasi Supabase (branch `feat/supabase-integration`): skema v2 & seed selaras data model aplikasi dijalankan via `supabase db push` (migrasi idempotent + policy RLS publik read/insert), lapisan repository `src/lib/supabase-store.ts`, seluruh route API (publik & admin) + upload foto (Supabase Storage bucket `gallery`/`news`) + halaman server dipindah dari mock store ke Supabase; API baru `/api/letter-types` & `/api/complaint-categories`; verifikasi end-to-end CRUD & akses publik (data sensitif `residents`/`users` terlindungi RLS) — 61 test lulus, lint & build bersih
   - 🏗️ Sisa Tahap 3.3/3.4 (notifikasi, rate limiting, UAT, deploy) masih berjalan
 
 ## 18. Glosarium

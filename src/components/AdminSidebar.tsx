@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import LogoutButton from '@/components/LogoutButton';
 
 const menu = [
   { label: 'Dashboard', href: '/admin/dashboard' },
@@ -46,10 +47,11 @@ export default function AdminSidebar() {
           );
         })}
       </nav>
-      <div className="p-4 border-t border-white/10">
-        <Link href="/" className={cn('text-sm text-gray-300 hover:text-white transition flex items-center gap-2', collapsed && 'justify-center')}>
+      <div className="p-4 border-t border-white/10 space-y-2">
+        <Link href="/" className="block text-sm text-gray-300 hover:text-white transition flex items-center gap-2">
           {!collapsed && 'Kembali ke Publik'}
         </Link>
+        <LogoutButton collapsed={collapsed} />
       </div>
     </aside>
   );

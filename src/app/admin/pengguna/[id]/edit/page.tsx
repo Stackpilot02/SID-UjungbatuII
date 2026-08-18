@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation';
 import UserForm from '../../baru/user-form';
+import { getUserById } from '@/lib/supabase-store';
 
 export default async function AdminPenggunaEditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { users } = await import('@/data/mock-data');
-  const item = users.find((u) => u.id === id);
+  const item = await getUserById(id);
   if (!item) notFound();
 
   return (

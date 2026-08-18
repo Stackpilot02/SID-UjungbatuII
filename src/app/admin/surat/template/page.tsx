@@ -1,11 +1,16 @@
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { letterTemplates, letterTypes } from '@/data/mock-data';
+import { getLetterTemplates, getLetterTypes } from '@/lib/supabase-store';
 import DeleteTemplateButton from './delete-template-button';
 
 export const dynamic = 'force-dynamic';
 
-export default function AdminTemplateSuratPage() {
+export default async function AdminTemplateSuratPage() {
+  const [letterTemplates, letterTypes] = await Promise.all([
+    getLetterTemplates(),
+    getLetterTypes(),
+  ]);
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">

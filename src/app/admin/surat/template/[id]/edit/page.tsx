@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation';
 import TemplateForm from '../../baru/template-form';
+import { getLetterTemplateById } from '@/lib/supabase-store';
 
 export default async function AdminTemplateEditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { letterTemplates } = await import('@/data/mock-data');
-  const item = letterTemplates.find((t) => t.id === id);
+  const item = await getLetterTemplateById(id);
   if (!item) notFound();
 
   return (

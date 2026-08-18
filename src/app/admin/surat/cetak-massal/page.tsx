@@ -1,21 +1,30 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { pdf } from '@react-pdf/renderer';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import { Label, Textarea, Select } from '@/components/form';
-import { letterTypes } from '@/data/mock-data';
 
 const LetterPDF = dynamic(() => import('@/components/LetterPDF').then(m => ({ default: m.LetterPDF })), { ssr: false });
 
 export default function AdminCetakMassalPage() {
+  const [letterTypes, setLetterTypes] = useState<{ id: string; name: string; code: string }[]>([]);
   const [letterTypeId, setLetterTypeId] = useState('');
   const [niks, setNiks] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [results, setResults] = useState<{ name: string; nik: string; number: string }[]>([]);
+
+  useEffect(() => {
+    fetch('/api/letter-types')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success) setLetterTypes(json.data);
+      })
+      .catch(() => setLetterTypes([]));
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();

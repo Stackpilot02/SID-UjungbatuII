@@ -1,8 +1,10 @@
 import Card from '@/components/Card';
-import { villageProfile } from '@/data/mock-data';
+import { getVillageProfile } from '@/lib/supabase-store';
 
-export default function KontakPage() {
-  const v = villageProfile;
+export const dynamic = 'force-dynamic';
+
+export default async function KontakPage() {
+  const v = await getVillageProfile();
   return (
     <div className="max-w-[1200px] mx-auto px-4 py-12">
       <h1 className="text-[32px] font-bold mb-8">Kontak & Jam Layanan</h1>
@@ -37,7 +39,7 @@ export default function KontakPage() {
               {/* Peta embed OpenStreetMap — koordinat kantor desa (mock, lihat mock-data) */}
               <iframe
                 title="Peta lokasi Desa Ujungbatu II"
-                src={`https://www.openstreetmap.org/export/embed.html?bbox=${v.mapLng - 0.015}%2C${v.mapLat - 0.01}%2C${v.mapLng + 0.015}%2C${v.mapLat + 0.01}&layer=mapnik&marker=${v.mapLat}%2C${v.mapLng}`}
+                src={`https://www.openstreetmap.org/export/embed.html?bbox=${(v.mapLng ?? 0) - 0.015}%2C${(v.mapLat ?? 0) - 0.01}%2C${(v.mapLng ?? 0) + 0.015}%2C${(v.mapLat ?? 0) + 0.01}&layer=mapnik&marker=${v.mapLat ?? 0}%2C${v.mapLng ?? 0}`}
                 className="w-full h-full absolute inset-0 border-0"
                 loading="lazy"
               />

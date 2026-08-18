@@ -1,9 +1,15 @@
 import { success, error } from '@/lib/api-utils';
-import { letterRequests, addLetterRequest } from '@/data/mock-data';
+import { getLetterRequests, addLetterRequest } from '@/lib/supabase-store';
 import { isValidNik, isValidPhone, isValidEmail } from '@/lib/validation';
 
 export async function GET() {
-  return success(letterRequests);
+  try {
+    const data = await getLetterRequests();
+    return success(data);
+  } catch (err) {
+    console.error('Ambil pengajuan surat gagal:', err);
+    return error('Gagal mengambil data pengajuan', 500);
+  }
 }
 
 export async function POST(request: Request) {
@@ -18,7 +24,8 @@ export async function POST(request: Request) {
     if (email && !isValidEmail(email)) return error('Format email tidak valid');
     if (!purpose?.trim()) return error('Keperluan surat wajib diisi');
 
-    const record = addLetterRequest({
+    const record = await addLetterRequest({
+      id: 'LR-' + Date.now(),
       letterTypeId,
       requesterName: requesterName.trim(),
       requesterNik: requesterNik.trim(),

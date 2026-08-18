@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation';
 import NewsForm from '../../baru/news-form';
+import { getNewsById } from '@/lib/supabase-store';
 
 export default async function AdminKontenEditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { news } = await import('@/data/mock-data');
-  const item = news.find((n) => n.id === id);
+  const item = await getNewsById(id);
   if (!item) notFound();
 
   return (

@@ -1,8 +1,14 @@
 import { success, error } from '@/lib/api-utils';
-import { galleryItems, addGalleryItem, deleteGalleryItem } from '@/data/mock-data';
+import { getGalleryItems, addGalleryItem, deleteGalleryItem } from '@/lib/supabase-store';
 
 export async function GET() {
-  return success(galleryItems);
+  try {
+    const data = await getGalleryItems();
+    return success(data);
+  } catch (err) {
+    console.error('Ambil galeri gagal:', err);
+    return error('Gagal mengambil data galeri', 500);
+  }
 }
 
 export async function POST(request: Request) {
@@ -14,7 +20,7 @@ export async function POST(request: Request) {
     if (!mediaUrl?.trim()) return error('URL foto wajib diisi');
     if (!['image', 'video'].includes(mediaType ?? 'image')) return error('Tipe media tidak valid');
 
-    const record = addGalleryItem({
+    const record = await addGalleryItem({
       title: title.trim(),
       description: (description ?? '').trim(),
       mediaUrl: mediaUrl.trim(),
@@ -35,7 +41,7 @@ export async function DELETE(request: Request) {
     const id = searchParams.get('id');
     if (!id) return error('Missing id');
 
-    const ok = deleteGalleryItem(id);
+    const ok = await deleteGalleryItem(id);
     if (!ok) return error('Foto tidak ditemukan', 404);
     return success({ id, deleted: true });
   } catch (err) {

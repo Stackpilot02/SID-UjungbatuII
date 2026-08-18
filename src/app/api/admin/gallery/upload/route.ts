@@ -1,8 +1,7 @@
-import { mkdir, writeFile } from 'node:fs/promises';
-import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { error, success } from '@/lib/api-utils';
 import { isValidFileSize } from '@/lib/validation';
+import { createAdminClient } from '@/lib/supabase-admin';
 
 export const runtime = 'nodejs';
 
@@ -29,16 +28,18 @@ export async function POST(request: Request) {
       return error('Format gambar harus JPG, PNG, atau WebP');
     }
 
-    // TODO: konfirmasi — penyimpanan sementara di public/uploads/gallery.
-    // Integrasi final menyimpan ke Supabase Storage bucket "gallery"
-    // saat koneksi Supabase tersedia (lihat architecture.md §4.3).
-    const dir = path.join(process.cwd(), 'public', 'uploads', 'gallery');
-    await mkdir(dir, { recursive: true });
+    const db = createAdminClient();
     const filename = `${randomUUID()}.${ext}`;
     const buffer = Buffer.from(await file.arrayBuffer());
-    await writeFile(path.join(dir, filename), buffer);
 
-    return success({ url: `/uploads/gallery/${filename}` }, 201);
+    const { data, error: uploadError } = await db.storage
+      .from('gallery')
+      .upload(filename, buffer, { contentType: file.type, upsert: false });
+
+    if (uploadError) throw new Error(uploadError.message);
+
+    const { data: publicUrl } = db.storage.from('gallery').getPublicUrl(data.path);
+    return success({ url: publicUrl.publicUrl }, 201);
   } catch (err) {
     console.error('Upload foto galeri gagal:', err);
     return error('Gagal mengunggah gambar', 500);

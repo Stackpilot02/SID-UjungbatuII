@@ -1,13 +1,15 @@
 import Card from '@/components/Card';
 import StatusBadge from '@/components/StatusBadge';
 import Button from '@/components/Button';
-import { news } from '@/data/mock-data';
+import { getNews } from '@/lib/supabase-store';
 import { formatDateShort } from '@/lib/utils';
 import DeleteNewsButton from './delete-news-button';
 
 export const dynamic = 'force-dynamic';
 
-export default function AdminKontenPage() {
+export default async function AdminKontenPage() {
+  const news = await getNews();
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
