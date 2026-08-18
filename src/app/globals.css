@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #2D5A44;
-  --color-primary-dark: #1A3428;
-  --color-primary-tint: #E8F0EA;
+  --color-primary: #1B4D3E;
+  --color-primary-dark: #0F2E25;
+  --color-primary-tint: #E9F1ED;
   --color-accent-clay: #A64B2A;
   --color-accent-gold: #C4942B;
-  --color-bg: #FDFBF7;
+  --color-bg: #F5F6F4;
   --color-surface: #FFFFFF;
-  --color-border: #E8E5DE;
-  --color-text: #1A1C18;
-  --color-text-muted: #6B6F66;
+  --color-border: #E4E7E3;
+  --color-text: #1A1F1C;
+  --color-text-muted: #5F6B64;
   --color-success: #2E7D4F;
   --color-warning: #C4942B;
   --color-danger: #B23A2E;
@@ -23,41 +23,6 @@ body {
   font-family: var(--font-body);
   color: var(--color-text);
   background-color: var(--color-bg);
-  background-image:
-    radial-gradient(ellipse 65% 45% at 15% 25%, rgba(45,90,68,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 55% 40% at 85% 20%, rgba(166,75,42,0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 45% at 50% 85%, rgba(196,148,43,0.04) 0%, transparent 60%),
-    url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='4' cy='4' r='0.5' fill='%23000000' opacity='0.08'/%3E%3Ccircle cx='84' cy='84' r='0.5' fill='%23000000' opacity='0.08'/%3E%3Ccircle cx='44' cy='124' r='0.5' fill='%23000000' opacity='0.08'/%3E%3Ccircle cx='124' cy='44' r='0.5' fill='%23000000' opacity='0.08'/%3E%3Ccircle cx='84' cy='4' r='0.5' fill='%23000000' opacity='0.08'/%3E%3Ccircle cx='4' cy='84' r='0.5' fill='%23000000' opacity='0.08'/%3E%3C/svg%3E");
-  background-size: 160px 160px, 100% 100%, 100% 100%, 160px 160px;
-  background-position: 0 0, 0 0, 0 0, 0 0;
-  animation: ambientDrift 90s ease-in-out infinite alternate;
-  position: relative;
-}
-
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.5;
-  background-image: 
-    radial-gradient(ellipse 30% 25% at 60% 50%, rgba(196,148,43,0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 25% 20% at 30% 60%, rgba(45,90,68,0.04) 0%, transparent 60%);
-  animation: warmPulse 8s ease-in-out infinite alternate;
-}
-
-@keyframes ambientDrift {
-  0% { background-position: 0 0, 0 0, 0 0, 0 0; }
-  25% { background-position: 20px 10px, 10px -5px, -15px 8px, 5px -3px; }
-  50% { background-position: -10px 20px, -8px 12px, 10px -10px, -3px 5px; }
-  75% { background-position: 15px -8px, 5px -10px, -5px 15px, 8px -5px; }
-  100% { background-position: -20px -15px, 12px 8px, 8px -5px, -5px 8px; }
-}
-
-@keyframes warmPulse {
-  0% { opacity: 0.3; }
-  50% { opacity: 0.6; }
-  100% { opacity: 0.4; }
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -67,4 +32,9 @@ h1, h2, h3, h4, h5, h6 {
 ::selection {
   background-color: var(--color-primary);
   color: white;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
