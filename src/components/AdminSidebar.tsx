@@ -9,6 +9,7 @@ const menu = [
   { label: 'Dashboard', href: '/admin/dashboard' },
   { label: 'Manajemen Konten', href: '/admin/konten' },
   { label: 'Kependudukan', href: '/admin/kependudukan' },
+  { label: 'Statistik', href: '/admin/statistik' },
   { label: 'Template Surat', href: '/admin/surat/template' },
   { label: 'Proses Surat', href: '/admin/surat/proses' },
   { label: 'Arsip Surat', href: '/admin/surat/arsip' },
