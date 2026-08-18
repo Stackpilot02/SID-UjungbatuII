@@ -90,13 +90,16 @@ export function addNews(item: Omit<(typeof news)[number], 'id' | 'createdAt'>) {
   return record;
 }
 
+// TODO: konfirmasi — foto galeri masih placeholder (aset lokal /public/gallery).
+// Ganti dengan foto asli kegiatan desa saat tersedia; integrasi final
+// menyimpan ke tabel gallery_items di Supabase (schema.md §3.6).
 export const galleryItems = [
-  { id: "1", title: "Gotong Royong Jalan Desa", description: "Warga bergotong royong membersihkan jalan desa", mediaUrl: "", mediaType: "image", eventDate: "2026-07-20" },
-  { id: "2", title: "Sosialisasi BLT", description: "Kegiatan sosialisasi BLT di Balai Desa", mediaUrl: "", mediaType: "image", eventDate: "2026-07-15" },
-  { id: "3", title: "Pembagian Bibit Karet", description: "Pembagian bibit karet kepada kelompok tani", mediaUrl: "", mediaType: "image", eventDate: "2026-07-10" },
-  { id: "4", title: "Senam Sehat", description: "Kegiatan senam sehat bersama warga", mediaUrl: "", mediaType: "image", eventDate: "2026-07-05" },
-  { id: "5", title: "Musyawarah Desa", description: "Musyawarah perencanaan pembangunan desa", mediaUrl: "", mediaType: "image", eventDate: "2026-06-28" },
-  { id: "6", title: "Pengajian Rutin", description: "Pengajian rutin ibu-ibu Desa Ujungbatu II", mediaUrl: "", mediaType: "image", eventDate: "2026-06-25" },
+  { id: "1", title: "Gotong Royong Jalan Desa", description: "Warga bergotong royong membersihkan jalan desa", mediaUrl: "/gallery/gotong-royong.jpg", mediaType: "image", eventDate: "2026-07-20" },
+  { id: "2", title: "Sosialisasi BLT", description: "Kegiatan sosialisasi BLT di Balai Desa", mediaUrl: "/gallery/sosialisasi-blt.jpg", mediaType: "image", eventDate: "2026-07-15" },
+  { id: "3", title: "Pembagian Bibit Karet", description: "Pembagian bibit karet kepada kelompok tani", mediaUrl: "/gallery/pembagian-bibit.jpg", mediaType: "image", eventDate: "2026-07-10" },
+  { id: "4", title: "Senam Sehat", description: "Kegiatan senam sehat bersama warga", mediaUrl: "/gallery/senam-sehat.jpg", mediaType: "image", eventDate: "2026-07-05" },
+  { id: "5", title: "Musyawarah Desa", description: "Musyawarah perencanaan pembangunan desa", mediaUrl: "/gallery/musyawarah-desa.jpg", mediaType: "image", eventDate: "2026-06-28" },
+  { id: "6", title: "Pengajian Rutin", description: "Pengajian rutin ibu-ibu Desa Ujungbatu II", mediaUrl: "/gallery/pengajian-rutin.jpg", mediaType: "image", eventDate: "2026-06-25" },
 ];
 
 export const complaintCategories = [
@@ -117,13 +120,107 @@ export const letterTypes = [
   { id: "8", code: "SKPD", name: "Surat Keterangan Pindah", requiresAttachment: false },
 ];
 
-export const residents = [
+export const users: Array<{
+  id: string;
+  fullName: string;
+  email: string;
+  role: string;
+}> = [
+  { id: '1', fullName: 'Muhammad Yusuf Lubis', email: 'kades@ujungbatu2.desa.id', role: 'kepala_desa' },
+  { id: '2', fullName: 'Ahmad Siregar', email: 'sekdes@ujungbatu2.desa.id', role: 'admin' },
+  { id: '3', fullName: 'Fatimah Harahap', email: 'fatimah@ujungbatu2.desa.id', role: 'operator' },
+];
+
+// TODO: konfirmasi — penyimpanan pengguna sementara di memori (mock).
+// Integrasi final menyimpan ke tabel profiles di Supabase (schema.md §3.1).
+export function addUser(item: Omit<(typeof users)[number], 'id'>) {
+  const record = { ...item, id: 'mock-' + Date.now() };
+  users.push(record);
+  return record;
+}
+
+export const letterRequests: Array<{
+  id: string;
+  requesterName: string;
+  requesterNik: string;
+  letterTypeId: string;
+  phone: string;
+  email: string;
+  purpose: string;
+  status: string;
+  createdAt: string;
+  additionalData?: Record<string, unknown>;
+}> = [];
+
+export const letterTemplates: Array<{
+  id: string;
+  letterTypeId: string;
+  name: string;
+  numberFormat: string;
+  bodyTemplate: string;
+  version: number;
+  isActive: boolean;
+  createdAt: string;
+}> = [];
+
+// TODO: konfirmasi — penyimpanan template surat sementara di memori (mock).
+// Integrasi final menyimpan ke tabel letter_templates di Supabase (schema.md §3.10).
+export function addLetterTemplate(
+  item: Omit<(typeof letterTemplates)[number], 'id' | 'version' | 'createdAt'>
+) {
+  const record = {
+    ...item,
+    id: 'mock-' + Date.now(),
+    version: 1,
+    createdAt: new Date().toISOString(),
+  };
+  letterTemplates.push(record);
+  return record;
+}
+
+// TODO: konfirmasi — penyimpanan pengajuan surat sementara di memori (mock).
+// Integrasi final menyimpan ke tabel letter_requests di Supabase (schema.md §3.11).
+export function addLetterRequest(
+  item: Omit<(typeof letterRequests)[number], 'id' | 'status' | 'createdAt'>
+) {
+  const record = {
+    ...item,
+    id: 'LR-' + Date.now(),
+    status: 'pending',
+    createdAt: new Date().toISOString(),
+  };
+  letterRequests.push(record);
+  return record;
+}
+
+export const residents: Array<{
+  id: string;
+  nik: string;
+  kkNumber: string;
+  fullName: string;
+  birthPlace: string;
+  birthDate: string;
+  gender: string;
+  dusun: string;
+  occupation: string;
+  religion: string;
+  maritalStatus: string;
+  familyRole: string;
+}> = [
   { id: "1", nik: "1209123456789001", kkNumber: "1209123456789001", fullName: "Muhammad Yusuf Lubis", birthPlace: "Ujungbatu", birthDate: "1975-03-15", gender: "Laki-laki", dusun: "Dusun I", occupation: "Petani", religion: "Islam", maritalStatus: "Kawin", familyRole: "Kepala Keluarga" },
   { id: "2", nik: "1209123456789002", kkNumber: "1209123456789001", fullName: "Siti Rahma Dalimunthe", birthPlace: "Padang Lawas", birthDate: "1980-07-22", gender: "Perempuan", dusun: "Dusun I", occupation: "Ibu Rumah Tangga", religion: "Islam", maritalStatus: "Kawin", familyRole: "Anggota" },
   { id: "3", nik: "1209123456789003", kkNumber: "1209123456789002", fullName: "Ahmad Siregar", birthPlace: "Hutaraja", birthDate: "1982-11-08", gender: "Laki-laki", dusun: "Dusun II", occupation: "Petani", religion: "Islam", maritalStatus: "Kawin", familyRole: "Kepala Keluarga" },
   { id: "4", nik: "1209123456789004", kkNumber: "1209123456789002", fullName: "Fatimah Harahap", birthPlace: "Padang Lawas", birthDate: "1985-05-30", gender: "Perempuan", dusun: "Dusun II", occupation: "Pedagang", religion: "Islam", maritalStatus: "Kawin", familyRole: "Anggota" },
   { id: "5", nik: "1209123456789005", kkNumber: "1209123456789003", fullName: "Abdul Hakim Nasution", birthPlace: "Gunungtua", birthDate: "1990-01-20", gender: "Laki-laki", dusun: "Dusun I", occupation: "Guru", religion: "Islam", maritalStatus: "Kawin", familyRole: "Kepala Keluarga" },
 ];
+
+// TODO: konfirmasi — penyimpanan penduduk sementara di memori (mock).
+// Integrasi final menyimpan ke tabel residents di Supabase (schema.md §3.2).
+export function addResident(item: Omit<(typeof residents)[number], 'id'>) {
+  const record = { ...item, id: 'mock-' + Date.now() };
+  residents.push(record);
+  return record;
+}
 
 export const stats = {
   totalPopulation: 1250,
