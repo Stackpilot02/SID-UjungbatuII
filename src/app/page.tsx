@@ -1,5 +1,6 @@
 import { api } from '@/lib/api-client';
 import { formatDate } from '@/lib/utils';
+import { NewsItem } from '@/lib/types';
 import Link from 'next/link';
 
 const services = [
@@ -17,9 +18,11 @@ const services = [
   },
 ];
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const [news, stats] = await Promise.all([
-    api.get<any[]>('/api/news').catch(() => []),
+    api.get<NewsItem[]>('/api/news').catch(() => []),
     api.get<{ totalPopulation: number; familyCardCount: number; maleCount: number; femaleCount: number }>('/api/stats').catch(() => ({
       totalPopulation: 0, familyCardCount: 0, maleCount: 0, femaleCount: 0,
     })),
@@ -147,7 +150,7 @@ export default async function HomePage() {
               <div className="md:col-span-3 text-center py-16 text-[var(--color-text-muted)] bg-black/[0.02] rounded-[1.75rem]">
                 <p className="font-medium">Belum ada berita</p>
               </div>
-            ) : latestNews.map((item: any) => (
+            ) : latestNews.map((item: NewsItem) => (
               <Link key={item.id} href={`/desa/berita/${item.slug}`}>
                 <div className="bg-black/[0.03] p-[1px] rounded-[1.75rem] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_8px_32px_rgba(26,28,24,0.08)] h-full">
                   <div className="bg-[var(--color-surface)] rounded-[calc(1.75rem-1px)] overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] h-full flex flex-col">

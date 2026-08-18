@@ -1,15 +1,18 @@
 import Card from '@/components/Card';
 import { api } from '@/lib/api-client';
 import { formatDate } from '@/lib/utils';
+import { GalleryItem } from '@/lib/types';
+
+export const dynamic = 'force-dynamic';
 
 export default async function GaleriPage() {
-  const items = await api.get<any[]>('/api/gallery').catch(() => []);
+  const items = await api.get<GalleryItem[]>('/api/gallery').catch(() => []);
 
   return (
     <div className="max-w-[1200px] mx-auto px-4 py-12">
       <h1 className="text-[32px] font-bold mb-8">Galeri Kegiatan</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {(items || []).map((item: any) => (
+        {(items || []).map((item: GalleryItem) => (
           <Card key={item.id} className="overflow-hidden p-0">
             <div className="aspect-video bg-[var(--color-primary-tint)] flex items-center justify-center text-[var(--color-primary)]">
               <svg className="w-12 h-12 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -208,7 +208,7 @@ Seluruh halaman publik & admin dibangun dengan data mock di `src/data/mock-data.
 
 **3.4 Testing & Deployment**
 - [ ] Uji seluruh Role Matrix (PRD §11)
-- [ ] Unit test: logika penomoran surat, RBAC
+- [x] Unit test: logika penomoran surat, RBAC, validasi (Vitest — `src/lib/__tests__/`)
 - [ ] User Acceptance Testing (UAT) bersama perangkat desa
 - [ ] Deploy ke Vercel (staging → production)
 - [ ] Migrasi data kependudukan awal dari sistem lama (Excel/manual)

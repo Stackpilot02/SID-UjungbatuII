@@ -232,6 +232,9 @@ Detail permission per aksi dan aturan eskalasi ada di **`rules.md`** §2.
 - ✅ Tahap 1 — Frontend (UI dengan data dummy): **Selesai**
 - ✅ Tahap 2 — Backend (API & Database): **Selesai**
 - 🏗️ Tahap 3 — Integrasi, Generate PDF/QR, Penyempurnaan, Testing & Deployment: **Sedang berjalan**
+  - ✅ Unit test logika penomoran surat, RBAC, dan validasi (Vitest) — 30 test lulus
+  - ✅ Lint & typecheck bersih, build produksi sukses
+  - 🏗️ Sisa Tahap 3.3/3.4 (notifikasi, rate limiting, UAT, deploy) masih berjalan
 
 ## 18. Glosarium
 

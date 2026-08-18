@@ -2,12 +2,15 @@ import Card from '@/components/Card';
 import Button from '@/components/Button';
 import { api } from '@/lib/api-client';
 import { formatDate } from '@/lib/utils';
+import { NewsItem } from '@/lib/types';
 import { notFound } from 'next/navigation';
+
+export const dynamic = 'force-dynamic';
 
 export default async function BeritaDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const news = await api.get<any[]>('/api/news').catch(() => []);
-  const item = (news || []).find((n: any) => n.slug === slug);
+  const news = await api.get<NewsItem[]>('/api/news').catch(() => []);
+  const item = (news || []).find((n: NewsItem) => n.slug === slug);
   if (!item) notFound();
 
   return (

@@ -1,9 +1,12 @@
 import Card from '@/components/Card';
 import { api } from '@/lib/api-client';
+import { VillageProfile, OrganizationStructureItem } from '@/lib/types';
+
+export const dynamic = 'force-dynamic';
 
 export default async function ProfilPage() {
-  const { profile, structure } = await api.get<{ profile: any; structure: any[] }>('/api/profile');
-  const v = profile || {};
+  const { profile, structure } = await api.get<{ profile: VillageProfile; structure: OrganizationStructureItem[] }>('/api/profile');
+  const v = profile || {} as VillageProfile;
 
   return (
     <div className="max-w-[1200px] mx-auto px-4 py-12">
@@ -35,7 +38,7 @@ export default async function ProfilPage() {
 
       <h2 className="text-[28px] font-bold mb-6">Struktur Organisasi</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {(structure || []).map((person: any) => (
+        {(structure || []).map((person: OrganizationStructureItem) => (
           <Card key={person.id} className="text-center">
             <div className="w-20 h-20 rounded-full bg-[var(--color-primary-tint)] mx-auto mb-4 flex items-center justify-center text-[var(--color-primary)] text-2xl font-bold">{person.name.charAt(0)}</div>
             <h3 className="font-semibold">{person.name}</h3>

@@ -1,12 +1,11 @@
 import Card from '@/components/Card';
 import { api } from '@/lib/api-client';
+import { PopulationStats } from '@/lib/types';
+
+export const dynamic = 'force-dynamic';
 
 export default async function StatistikPage() {
-  const stats = await api.get<{
-    totalPopulation: number; familyCardCount: number; maleCount: number; femaleCount: number;
-    dusunStats: { name: string; population: number }[];
-    occupationStats: { name: string; count: number }[];
-  }>('/api/stats').catch(() => ({
+  const stats = await api.get<PopulationStats>('/api/stats').catch(() => ({
     totalPopulation: 0, familyCardCount: 0, maleCount: 0, femaleCount: 0,
     dusunStats: [], occupationStats: [],
   }));
@@ -29,7 +28,7 @@ export default async function StatistikPage() {
         <Card>
           <h2 className="text-[22px] font-semibold mb-4">Penduduk per Dusun</h2>
           <div className="space-y-4">
-            {(s.dusunStats || []).map((d: any) => (
+            {(s.dusunStats || []).map((d) => (
               <div key={d.name}>
                 <div className="flex justify-between text-sm mb-1"><span className="font-medium">{d.name}</span><span className="text-[var(--color-text-muted)]">{d.population} jiwa</span></div>
                 <div className="h-2 bg-[var(--color-border)] rounded-full overflow-hidden">
@@ -42,7 +41,7 @@ export default async function StatistikPage() {
         <Card>
           <h2 className="text-[22px] font-semibold mb-4">Pekerjaan</h2>
           <div className="space-y-3">
-            {(s.occupationStats || []).map((o: any) => (
+            {(s.occupationStats || []).map((o) => (
               <div key={o.name} className="flex justify-between text-sm"><span>{o.name}</span><span className="font-medium">{o.count} orang</span></div>
             ))}
           </div>
