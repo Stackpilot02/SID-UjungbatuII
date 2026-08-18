@@ -15,7 +15,7 @@ const services = [
   },
   {
     title: 'Cek Status', desc: 'Lacak status pengajuan surat atau pengaduan yang telah Anda kirimkan.',
-    href: '/auth/login', btnText: 'Cek Status',
+    href: '/desa/layanan-surat/status', btnText: 'Cek Status',
   },
 ];
 
