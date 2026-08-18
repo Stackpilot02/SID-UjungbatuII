@@ -11,7 +11,7 @@ export default function AdminKontenPage() {
         <h1 className="text-[28px] font-bold">Manajemen Konten</h1>
         <Button variant="primary">+ Buat Berita</Button>
       </div>
-      <Card className="p-0 overflow-hidden">
+      <Card className="overflow-hidden" innerClassName="p-0 overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-[var(--color-bg)] border-b border-[var(--color-border)]">
             <tr>
