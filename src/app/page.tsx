@@ -30,13 +30,13 @@ export default async function HomePage() {
       familyCardCount: number;
       maleCount: number;
       femaleCount: number;
-      dusunStats: { name: string; population: number; families: number }[];
       occupationStats: { name: string; count: number }[];
+      religionStats: { name: string; count: number }[];
     }>('/api/stats').catch(() => null),
   ]);
 
   const latestNews = (news || []).slice(0, 3);
-  const s = stats || { totalPopulation: 0, familyCardCount: 0, maleCount: 0, femaleCount: 0, dusunStats: [], occupationStats: [] };
+  const s = stats || { totalPopulation: 0, familyCardCount: 0, maleCount: 0, femaleCount: 0, occupationStats: [], religionStats: [] };
 
   return (
     <div>
@@ -108,9 +108,8 @@ export default async function HomePage() {
               { label: 'Kartu Keluarga', value: s.familyCardCount },
               { label: 'Laki-laki', value: s.maleCount },
               { label: 'Perempuan', value: s.femaleCount },
-              ...s.dusunStats.map((d) => ({ label: d.name, value: d.population })),
-              ...(s.occupationStats[0] ? [{ label: s.occupationStats[0].name, value: s.occupationStats[0].count }] : []),
-              ...(s.occupationStats[1] ? [{ label: s.occupationStats[1].name, value: s.occupationStats[1].count }] : []),
+              ...s.occupationStats.map((o) => ({ label: o.name, value: o.count })),
+              ...s.religionStats.map((r) => ({ label: r.name, value: r.count })),
             ].slice(0, 8).map((item, i) => (
               <div key={i} className="bg-black/[0.03] p-[1px] rounded-[1.5rem] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_8px_32px_rgba(26,28,24,0.08)]">
                 <div className="bg-[var(--color-surface)] rounded-[calc(1.5rem-1px)] p-6 md:p-8 text-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)]">

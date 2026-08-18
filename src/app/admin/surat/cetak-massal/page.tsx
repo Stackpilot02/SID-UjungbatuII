@@ -30,7 +30,7 @@ export default function AdminCetakMassalPage() {
 
     const res = await fetch('/api/admin/residents');
     const json = await res.json();
-    const allResidents: Array<{ nik: string; fullName: string; dusun: string }> = json.success ? json.data : [];
+    const allResidents: Array<{ nik: string; fullName: string; occupation: string }> = json.success ? json.data : [];
     const residents = allResidents.filter(r => nikList.includes(r.nik));
 
     if (residents.length === 0) { setError('NIK tidak ditemukan di database'); setLoading(false); return; }
@@ -57,7 +57,7 @@ export default function AdminCetakMassalPage() {
           letterNumber={resultsArr[0].number}
           residentName={resultsArr[0].name}
           residentNIK={resultsArr[0].nik}
-          residentAddress={residents[0]?.dusun || '-'}
+          residentAddress={residents[0]?.occupation || '-'}
           purpose="administrasi"
         />
       );

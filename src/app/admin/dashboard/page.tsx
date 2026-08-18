@@ -34,16 +34,16 @@ export default async function AdminDashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
-          <h2 className="text-[22px] font-semibold mb-4">Statistik Penduduk</h2>
+          <h2 className="text-[22px] font-semibold mb-4">Statistik Pekerjaan</h2>
           <div className="space-y-4">
-            {stats.dusunStats.map((d) => (
-              <div key={d.name}>
+            {stats.occupationStats.map((o) => (
+              <div key={o.name}>
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="font-medium">{d.name}</span>
-                  <span className="text-[var(--color-text-muted)]">{d.population} jiwa</span>
+                  <span className="font-medium">{o.name}</span>
+                  <span className="text-[var(--color-text-muted)]">{o.count} orang</span>
                 </div>
                 <div className="h-2 bg-[var(--color-border)] rounded-full overflow-hidden">
-                  <div className="h-full bg-[var(--color-primary)] rounded-full" style={{ width: `${(d.population / stats.totalPopulation) * 100}%` }} />
+                  <div className="h-full bg-[var(--color-primary)] rounded-full" style={{ width: `${(o.count / stats.totalPopulation) * 100}%` }} />
                 </div>
               </div>
             ))}

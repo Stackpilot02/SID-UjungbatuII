@@ -7,10 +7,10 @@ export const dynamic = 'force-dynamic';
 export default async function StatistikPage() {
   const stats = await api.get<PopulationStats>('/api/stats').catch(() => ({
     totalPopulation: 0, familyCardCount: 0, maleCount: 0, femaleCount: 0,
-    dusunStats: [], occupationStats: [],
+    occupationStats: [], religionStats: [],
   }));
 
-  const s = stats || { totalPopulation: 0, familyCardCount: 0, maleCount: 0, femaleCount: 0, dusunStats: [], occupationStats: [] };
+  const s = stats || { totalPopulation: 0, familyCardCount: 0, maleCount: 0, femaleCount: 0, occupationStats: [], religionStats: [] };
 
   return (
     <div className="max-w-[1200px] mx-auto px-4 py-12">
@@ -26,23 +26,28 @@ export default async function StatistikPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
-          <h2 className="text-[22px] font-semibold mb-4">Penduduk per Dusun</h2>
+          <h2 className="text-[22px] font-semibold mb-4">Pekerjaan</h2>
           <div className="space-y-4">
-            {(s.dusunStats || []).map((d) => (
-              <div key={d.name}>
-                <div className="flex justify-between text-sm mb-1"><span className="font-medium">{d.name}</span><span className="text-[var(--color-text-muted)]">{d.population} jiwa</span></div>
+            {(s.occupationStats || []).map((o) => (
+              <div key={o.name}>
+                <div className="flex justify-between text-sm mb-1"><span className="font-medium">{o.name}</span><span className="text-[var(--color-text-muted)]">{o.count} orang</span></div>
                 <div className="h-2 bg-[var(--color-border)] rounded-full overflow-hidden">
-                  <div className="h-full bg-[var(--color-primary)] rounded-full" style={{ width: `${(d.population / (s.totalPopulation || 1)) * 100}%` }} />
+                  <div className="h-full bg-[var(--color-primary)] rounded-full" style={{ width: `${(o.count / (s.totalPopulation || 1)) * 100}%` }} />
                 </div>
               </div>
             ))}
           </div>
         </Card>
         <Card>
-          <h2 className="text-[22px] font-semibold mb-4">Pekerjaan</h2>
-          <div className="space-y-3">
-            {(s.occupationStats || []).map((o) => (
-              <div key={o.name} className="flex justify-between text-sm"><span>{o.name}</span><span className="font-medium">{o.count} orang</span></div>
+          <h2 className="text-[22px] font-semibold mb-4">Agama</h2>
+          <div className="space-y-4">
+            {(s.religionStats || []).map((r) => (
+              <div key={r.name}>
+                <div className="flex justify-between text-sm mb-1"><span className="font-medium">{r.name}</span><span className="text-[var(--color-text-muted)]">{r.count} jiwa</span></div>
+                <div className="h-2 bg-[var(--color-border)] rounded-full overflow-hidden">
+                  <div className="h-full bg-[var(--color-primary)] rounded-full" style={{ width: `${(r.count / (s.totalPopulation || 1)) * 100}%` }} />
+                </div>
+              </div>
             ))}
           </div>
         </Card>

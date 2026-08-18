@@ -15,7 +15,6 @@ export default function AdminKependudukanPage() {
             <tr>
               <th className="text-left px-4 py-3 font-medium">NIK</th>
               <th className="text-left px-4 py-3 font-medium">Nama</th>
-              <th className="text-left px-4 py-3 font-medium">Dusun</th>
               <th className="text-left px-4 py-3 font-medium">Pekerjaan</th>
               <th className="text-left px-4 py-3 font-medium">Aksi</th>
             </tr>
@@ -25,7 +24,6 @@ export default function AdminKependudukanPage() {
               <tr key={r.id} className="border-b border-[var(--color-border)] last:border-0">
                 <td className="px-4 py-3 font-mono-data text-xs">{r.nik}</td>
                 <td className="px-4 py-3 font-medium">{r.fullName}</td>
-                <td className="px-4 py-3 text-[var(--color-text-muted)]">{r.dusun}</td>
                 <td className="px-4 py-3 text-[var(--color-text-muted)]">{r.occupation}</td>
                 <td className="px-4 py-3"><button className="text-[var(--color-primary)] hover:underline text-xs">Edit</button></td>
               </tr>

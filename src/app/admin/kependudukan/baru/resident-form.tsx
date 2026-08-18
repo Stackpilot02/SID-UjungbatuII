@@ -16,7 +16,6 @@ export default function ResidentForm() {
     birthPlace: '',
     birthDate: '',
     gender: 'Laki-laki',
-    dusun: 'Dusun I',
     occupation: '',
     religion: 'Islam',
     maritalStatus: 'Belum Kawin',
@@ -135,21 +134,12 @@ export default function ResidentForm() {
         </Card>
 
         <Card>
-          <h2 className="text-lg font-semibold mb-4">Data Wilayah & Pekerjaan</h2>
+          <h2 className="text-lg font-semibold mb-4">Data Pekerjaan</h2>
           <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label>Dusun</Label>
-                <Select value={form.dusun} onChange={(e) => set('dusun', e.target.value)}>
-                  <option>Dusun I</option>
-                  <option>Dusun II</option>
-                </Select>
-              </div>
-              <div>
-                <Label>Pekerjaan *</Label>
-                <Input value={form.occupation} onChange={(e) => set('occupation', e.target.value)} placeholder="Contoh: Petani" />
-                <FieldError message={errors.occupation} />
-              </div>
+            <div>
+              <Label>Pekerjaan *</Label>
+              <Input value={form.occupation} onChange={(e) => set('occupation', e.target.value)} placeholder="Contoh: Petani" />
+              <FieldError message={errors.occupation} />
             </div>
             <div>
               <Label>Status Perkawinan</Label>
