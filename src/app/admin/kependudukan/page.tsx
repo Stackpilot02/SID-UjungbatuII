@@ -7,7 +7,7 @@ export default function AdminKependudukanPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-[28px] font-bold">Data Kependudukan</h1>
-        <Button variant="primary">+ Tambah Penduduk</Button>
+        <Button href="/admin/kependudukan/baru" variant="primary">+ Tambah Penduduk</Button>
       </div>
       <Card className="overflow-hidden" innerClassName="p-0 overflow-hidden">
         <table className="w-full text-sm">

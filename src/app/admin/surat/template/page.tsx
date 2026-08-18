@@ -7,7 +7,7 @@ export default function AdminTemplateSuratPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-[28px] font-bold">Template Surat</h1>
-        <Button variant="primary">+ Buat Template</Button>
+        <Button href="/admin/surat/template/baru" variant="primary">+ Buat Template</Button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {letterTypes.map((lt) => (
