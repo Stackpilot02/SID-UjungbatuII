@@ -2,6 +2,7 @@ import { api } from '@/lib/api-client';
 import { formatDate } from '@/lib/utils';
 import { NewsItem } from '@/lib/types';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const services = [
   {
@@ -33,32 +34,42 @@ export default async function HomePage() {
 
   return (
     <div>
-      <section className="relative min-h-[85dvh] flex items-center pt-8">
-        <div className="max-w-[1200px] mx-auto px-4 w-full">
+      <section className="relative min-h-[85dvh] flex items-center overflow-hidden">
+        <Image
+          src="/hero-desa.png"
+          alt="Lanskap perkebunan dan permukiman Desa Ujungbatu II"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0B1F18]/90 via-[#0B1F18]/55 to-[#0B1F18]/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F18]/70 via-transparent to-[#0B1F18]/20" />
+        <div className="max-w-[1200px] mx-auto px-4 w-full relative z-10 py-24">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-1.5 mb-8 ring-1 ring-black/[0.05] shadow-[0_2px_12px_rgba(27,30,28,0.04)]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]" />
-              <span className="text-xs font-medium text-[var(--color-primary)] tracking-[0.15em] uppercase">Sistem Informasi Desa</span>
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md rounded-full px-4 py-1.5 mb-8 ring-1 ring-white/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent-gold)]" />
+              <span className="text-xs font-medium text-white tracking-[0.15em] uppercase">Sistem Informasi Desa</span>
             </div>
-            <h1 className="font-[family-name:var(--font-heading)] text-5xl md:text-7xl leading-[1.04] tracking-[-0.04em] font-bold mb-6">
+            <h1 className="font-[family-name:var(--font-heading)] text-white text-5xl md:text-7xl leading-[1.04] tracking-[-0.04em] font-bold mb-6 drop-shadow-[0_2px_16px_rgba(0,0,0,0.35)]">
               Desa Ujungbatu II
-              <span className="block text-[var(--color-text-muted)] mt-2 text-2xl md:text-4xl tracking-[-0.02em] font-semibold">
+              <span className="block text-white/85 mt-2 text-2xl md:text-4xl tracking-[-0.02em] font-semibold">
                 Maju, Mandiri, dan Sejahtera.
               </span>
             </h1>
-            <p className="text-base md:text-lg text-[var(--color-text-muted)] max-w-xl mb-12 leading-relaxed">
+            <p className="text-base md:text-lg text-white/85 max-w-xl mb-12 leading-relaxed">
               Kec. Hutaraja Tinggi, Kab. Padang Lawas, Sumatera Utara — pelayanan administrasi desa yang transparan, cepat, dan ramah, kini dapat diakses secara online.
             </p>
             <div className="flex gap-4 flex-wrap">
-              <a href="/desa/layanan-surat" className="group inline-flex items-center gap-3 bg-[var(--color-primary)] text-white rounded-full pl-6 pr-1.5 py-1.5 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[var(--color-primary-dark)] active:scale-[0.97] shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]">
+              <a href="/desa/layanan-surat" className="group inline-flex items-center gap-3 bg-white text-[var(--color-primary-dark)] rounded-full pl-6 pr-1.5 py-1.5 text-sm font-semibold transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[var(--color-primary-tint)] active:scale-[0.97] shadow-[0_8px_24px_rgba(0,0,0,0.25)]">
                 Ajukan Surat Online
-                <span className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5">
-                  <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <span className="w-9 h-9 rounded-full bg-[var(--color-primary)] text-white flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
                   </svg>
                 </span>
               </a>
-              <a href="/desa/pengaduan" className="group inline-flex items-center gap-3 bg-[var(--color-accent-clay)] text-white rounded-full pl-6 pr-1.5 py-1.5 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:opacity-90 active:scale-[0.97] shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]">
+              <a href="/desa/pengaduan" className="group inline-flex items-center gap-3 bg-[var(--color-accent-clay)] text-white rounded-full pl-6 pr-1.5 py-1.5 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:opacity-90 active:scale-[0.97] shadow-[0_8px_24px_rgba(0,0,0,0.25)]">
                 Sampaikan Pengaduan
                 <span className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5">
                   <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -66,9 +77,9 @@ export default async function HomePage() {
                   </svg>
                 </span>
               </a>
-              <a href="/desa/profil" className="group inline-flex items-center gap-3 pl-6 pr-1.5 py-1.5 rounded-full text-sm font-medium text-[var(--color-text-muted)] border border-black/[0.08] bg-white transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-[var(--color-text)] hover:text-[var(--color-text)] active:scale-[0.97]">
+              <a href="/desa/profil" className="group inline-flex items-center gap-3 pl-6 pr-1.5 py-1.5 rounded-full text-sm font-medium text-white border border-white/30 bg-white/10 backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-white/20 active:scale-[0.97]">
                 Profil Desa
-                <span className="w-9 h-9 rounded-full bg-black/[0.04] flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5">
+                <span className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5">
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
                   </svg>

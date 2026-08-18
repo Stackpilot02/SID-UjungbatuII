@@ -40,6 +40,11 @@
 - `Button` semua varian menjadi pill `rounded-full` dengan `active:scale-[0.97]`.
 - `Badge` memakai ring halus `ring-black/[0.04]`.
 
+### 0.5 Banner Hero (Beranda)
+- Hero beranda kini memakai foto panorama desa (`/hero-desa.png`) sebagai latar full-bleed (`object-cover`).
+- Dua overlay gradient `#0B1F18` memastikan kontras WCAG AA: (1) kiri → kanan (`90% → 10%`), (2) bawah → atas (`70% → 20%`) agar teks dan CTA selalu terbaca.
+- Teks hero putih dengan `drop-shadow`; CTA utama putih solid berteks hijau gelap; CTA sekunder & Profil memakai glass (`bg-white/10 backdrop-blur-md`).
+
 > Dokumen v2.0 di bawah tetap dipertahankan sebagai referensi historis. Token yang berlaku adalah §0.2.
 
 ## 1. Arah & Rasional
