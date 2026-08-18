@@ -34,6 +34,9 @@ dev-server.log
 # aset sumber (foto mentah) — disimpan di root, tidak ikut build
 Contoh_foto_desa.png
 
+# upload runtime (foto berita dari admin) — tidak di-commit ke git
+/public/uploads/
+
 # env files (can opt-in for committing if needed)
 .env*
 

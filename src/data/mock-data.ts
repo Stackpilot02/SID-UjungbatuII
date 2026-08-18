@@ -31,13 +31,25 @@ export const organizationStructure = [
   { id: "8", name: "Syamsul Bahri Siregar", position: "Kepala Dusun II", orderIndex: 8, photoUrl: "" },
 ];
 
-export const news = [
+export const news: Array<{
+  id: string;
+  title: string;
+  slug: string;
+  category: string;
+  excerpt: string;
+  content: string;
+  coverImageUrl: string;
+  status: string;
+  authorId: string;
+  publishedAt: string;
+  createdAt: string;
+}> = [
   {
     id: "1", title: "Kegiatan Gotong Royong Bersihkan Jalan Desa",
     slug: "gotong-royong-bersihkan-jalan", category: "berita",
     excerpt: "Warga Desa Ujungbatu II bergotong royong membersihkan jalan utama desa menjelang musim panen.",
     content: "Pada hari Minggu, 20 Juli 2026, warga Desa Ujungbatu II melaksanakan kegiatan gotong royong membersihkan jalan utama desa. Kegiatan ini dihadiri oleh Kepala Desa, perangkat desa, serta warga dari kedua dusun. Jalur sepanjang 3 kilometer berhasil dibersihkan dari rumput liar dan sampah. Kegiatan ini merupakan agenda rutin yang dilakukan setiap bulan.",
-    coverImageUrl: "", status: "published", authorId: "1",
+    coverImageUrl: "/hero-desa.png", status: "published", authorId: "1",
     publishedAt: "2026-07-20T10:00:00Z", createdAt: "2026-07-20T08:00:00Z",
   },
   {
@@ -45,7 +57,7 @@ export const news = [
     slug: "sosialisasi-blt", category: "pengumuman",
     excerpt: "Pemerintah Desa mengadakan sosialisasi terkait penyaluran BLT Dana Desa tahun 2026.",
     content: "Pemerintah Desa Ujungbatu II mengadakan sosialisasi Program Bantuan Langsung Tunai (BLT) yang bersumber dari Dana Desa Tahun Anggaran 2026. Kegiatan berlangsung di Balai Desa dan dihadiri oleh 50 Keluarga Penerima Manfaat (KPM). Besaran BLT yang disalurkan sebesar Rp300.000 per bulan per KPM.",
-    coverImageUrl: "", status: "published", authorId: "1",
+    coverImageUrl: "/hero-desa.png", status: "published", authorId: "1",
     publishedAt: "2026-07-15T09:00:00Z", createdAt: "2026-07-14T10:00:00Z",
   },
   {
@@ -53,7 +65,7 @@ export const news = [
     slug: "pembagian-bibit-karet", category: "berita",
     excerpt: "Dinas Pertanian menyalurkan bantuan bibit karet unggul kepada kelompok tani di Desa Ujungbatu II.",
     content: "Sebanyak 5.000 bibit karet unggul dibagikan kepada 3 kelompok tani di Desa Ujungbatu II. Program ini merupakan kerjasama antara Dinas Pertanian Kabupaten Padang Lawas dengan Pemerintah Desa. Diharapkan bantuan ini dapat meningkatkan produktivitas perkebunan karet warga.",
-    coverImageUrl: "", status: "published", authorId: "2",
+    coverImageUrl: "/hero-desa.png", status: "published", authorId: "2",
     publishedAt: "2026-07-10T08:00:00Z", createdAt: "2026-07-09T08:00:00Z",
   },
   {
@@ -61,10 +73,22 @@ export const news = [
     slug: "hut-ri-81", category: "pengumuman",
     excerpt: "Rangkaian acara peringatan HUT RI ke-81 akan dilaksanakan pada 17 Agustus 2026 di lapangan desa.",
     content: "Dalam rangka memperingati Hari Kemerdekaan Republik Indonesia ke-81, Pemerintah Desa Ujungbatu II akan mengadakan berbagai kegiatan, antara lain: upacara bendera, lomba-lomba tradisional, jalan sehat, dan malam tasyakuran. Diharapkan seluruh warga dapat berpartisipasi memeriahkan acara.",
-    coverImageUrl: "", status: "published", authorId: "1",
+    coverImageUrl: "/hero-desa.png", status: "published", authorId: "1",
     publishedAt: "2026-08-01T08:00:00Z", createdAt: "2026-07-30T08:00:00Z",
   },
 ];
+
+// TODO: konfirmasi — penyimpanan berita sementara di memori (mock).
+// Integrasi final menyimpan ke tabel news di Supabase (schema.sql §2.5).
+export function addNews(item: Omit<(typeof news)[number], 'id' | 'createdAt'>) {
+  const record = {
+    ...item,
+    id: 'mock-' + Date.now(),
+    createdAt: new Date().toISOString(),
+  };
+  news.push(record);
+  return record;
+}
 
 export const galleryItems = [
   { id: "1", title: "Gotong Royong Jalan Desa", description: "Warga bergotong royong membersihkan jalan desa", mediaUrl: "", mediaType: "image", eventDate: "2026-07-20" },

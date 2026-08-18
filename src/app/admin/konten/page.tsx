@@ -9,7 +9,7 @@ export default function AdminKontenPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-[28px] font-bold">Manajemen Konten</h1>
-        <Button variant="primary">+ Buat Berita</Button>
+        <Button href="/admin/konten/baru" variant="primary">+ Buat Berita</Button>
       </div>
       <Card className="overflow-hidden" innerClassName="p-0 overflow-hidden">
         <table className="w-full text-sm">

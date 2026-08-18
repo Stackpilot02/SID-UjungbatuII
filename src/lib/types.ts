@@ -26,6 +26,7 @@ export interface NewsItem {
   category: string;
   excerpt: string;
   content: string;
+  coverImageUrl?: string;
   publishedAt: string;
   [key: string]: unknown;
 }
