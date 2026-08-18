@@ -7,17 +7,29 @@ import Button from '@/components/Button';
 import { Label, Input, Select, Textarea, FieldError } from '@/components/form';
 import { letterTypes } from '@/data/mock-data';
 
-export default function TemplateForm() {
+type TemplateFormState = {
+  id?: string;
+  letterTypeId: string;
+  name: string;
+  numberFormat: string;
+  bodyTemplate: string;
+  isActive: boolean;
+};
+
+export default function TemplateForm({ initialData }: { initialData?: Partial<TemplateFormState> }) {
   const router = useRouter();
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<TemplateFormState>({
     letterTypeId: '',
     name: '',
     numberFormat: '',
     bodyTemplate: '',
     isActive: true,
+    ...initialData,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+
+  const isEdit = Boolean(initialData?.id);
 
   const set = (key: keyof typeof form, value: string | boolean) => {
     setForm((f) => ({ ...f, [key]: value }));
@@ -46,8 +58,8 @@ export default function TemplateForm() {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/letter-templates', {
-        method: 'POST',
+      const res = await fetch(isEdit && initialData?.id ? `/api/admin/letter-templates?id=${initialData.id}` : '/api/admin/letter-templates', {
+        method: isEdit ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
@@ -65,14 +77,14 @@ export default function TemplateForm() {
     <form onSubmit={handleSubmit}>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-[28px] font-bold">Buat Template Surat</h1>
+          <h1 className="text-[28px] font-bold">{isEdit ? 'Edit Template Surat' : 'Buat Template Surat'}</h1>
           <p className="text-sm text-[var(--color-text-muted)] mt-1">
             Gunakan placeholder seperti {'{{nama}}'}, {'{{nik}}'}, {'{{alamat}}'}, {'{{tanggal}}'} di isi template.
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Button type="button" variant="secondary" href="/admin/surat/template">Batal</Button>
-          <Button type="submit" disabled={loading}>{loading ? 'Menyimpan...' : 'Simpan Template'}</Button>
+          <Button type="submit" disabled={loading}>{loading ? 'Menyimpan...' : isEdit ? 'Simpan Perubahan' : 'Simpan Template'}</Button>
         </div>
       </div>
 
