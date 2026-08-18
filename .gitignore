@@ -40,6 +40,9 @@ Contoh_foto_desa.png
 # env files (can opt-in for committing if needed)
 .env*
 
+# supabase cli (status project lokal)
+/supabase/.temp/
+
 # vercel
 .vercel
 
