@@ -34,6 +34,9 @@ export interface NewsItem {
 export interface GalleryItem {
   id: string;
   title: string;
+  description?: string;
+  mediaUrl?: string;
+  mediaType?: string;
   eventDate: string;
   [key: string]: unknown;
 }

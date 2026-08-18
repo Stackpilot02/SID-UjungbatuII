@@ -31,17 +31,20 @@ export default function KontakPage() {
           </Card>
         </div>
         <div>
-          <Card className="h-full">
+          <Card className="h-full" innerClassName="h-full flex flex-col">
             <h2 className="text-[22px] font-semibold mb-4">Peta Lokasi</h2>
-            <div className="aspect-video bg-[var(--color-primary-tint)] rounded-lg flex items-center justify-center text-[var(--color-text-muted)]">
-              <div className="text-center">
-                <svg className="w-12 h-12 mx-auto mb-2 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeWidth={1.5} d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" />
-                </svg>
-                <p>Peta akan ditampilkan di sini</p>
-                <p className="text-xs mt-1">(Integrasi Google Maps/OpenStreetMap)</p>
-              </div>
+            <div className="relative flex-1 min-h-[320px] rounded-xl overflow-hidden bg-[var(--color-primary-tint)]">
+              {/* Peta embed OpenStreetMap — koordinat kantor desa (mock, lihat mock-data) */}
+              <iframe
+                title="Peta lokasi Desa Ujungbatu II"
+                src={`https://www.openstreetmap.org/export/embed.html?bbox=${v.mapLng - 0.015}%2C${v.mapLat - 0.01}%2C${v.mapLng + 0.015}%2C${v.mapLat + 0.01}&layer=mapnik&marker=${v.mapLat}%2C${v.mapLng}`}
+                className="w-full h-full absolute inset-0 border-0"
+                loading="lazy"
+              />
             </div>
+            <p className="text-xs text-[var(--color-text-muted)] mt-3">
+              Kantor Desa Ujungbatu II — {v.villageName}, {v.address}
+            </p>
           </Card>
         </div>
       </div>
