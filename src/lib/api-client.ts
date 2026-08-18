@@ -1,13 +1,24 @@
+import { headers } from 'next/headers';
+
 type Options = RequestInit & { params?: Record<string, string> };
+
+async function resolveBaseUrl(): Promise<string> {
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  const h = await headers();
+  const host = h.get('host');
+  const proto = h.get('x-forwarded-proto') || 'http';
+  return `${proto}://${host}`;
+}
 
 async function request<T>(url: string, options: Options = {}): Promise<T> {
   const { params, ...init } = options;
-  let fullUrl = url;
+  let path = url;
   if (params) {
     const qs = new URLSearchParams(params).toString();
-    fullUrl += '?' + qs;
+    path += '?' + qs;
   }
-  const res = await fetch(fullUrl, {
+  const absoluteUrl = new URL(path, await resolveBaseUrl()).toString();
+  const res = await fetch(absoluteUrl, {
     headers: { 'Content-Type': 'application/json', ...init.headers },
     ...init,
   });
